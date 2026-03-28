@@ -30,7 +30,7 @@ model Vault {
   name String
   icon String?
 
-  testAuthHash       String
+  testAuthHash   String
   lastAccessedAt DateTime?
 
   ownerId String
