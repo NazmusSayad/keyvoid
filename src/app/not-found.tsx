@@ -1,3 +1,3 @@
-import { NotFoundPage } from '@/components/misc/not-found-page'
+import { NotFoundPage } from '@/components/not-found-page'
 
 export default NotFoundPage
