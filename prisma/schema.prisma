@@ -31,7 +31,7 @@ model Vault {
   testAuth String
 
   ownerId String
-  owner   User   @relation(fields: [ownerId], references: [id])
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   vaultRecords VaultRecord[]
 }
@@ -46,7 +46,7 @@ model VaultRecord {
   data Json /* Array<{ key: value }> */
 
   vaultId String
-  vault   Vault  @relation(fields: [vaultId], references: [id])
+  vault   Vault  @relation(fields: [vaultId], references: [id], onDelete: Cascade)
 }
 
 enum RecordType {
