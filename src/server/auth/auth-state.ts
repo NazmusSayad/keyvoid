@@ -2,18 +2,15 @@ import 'server-only'
 
 import { serverEnv } from '@/env.server'
 import type { PendingAuthState } from '@/server/auth/types'
-import ms, { type StringValue } from 'ms'
+import ms from 'ms'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 const sessionCookieName = 'vault-app-session'
 const pendingAuthCookieName = 'vault-workos-pending-auth'
-const sessionMaxAge = ms(serverEnv.APP_SESSION_TTL as StringValue)
-const secureCookies = serverEnv.APP_URL.startsWith('https://')
 
-if (typeof sessionMaxAge !== 'number') {
-  throw new Error('APP_SESSION_TTL must be a valid duration.')
-}
+const sessionMaxAge = ms('30d')
+const secureCookies = serverEnv.APP_URL.startsWith('https://')
 
 const sessionMaxAgeInSeconds = Math.floor(sessionMaxAge / 1000)
 

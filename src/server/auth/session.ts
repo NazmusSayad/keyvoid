@@ -37,7 +37,7 @@ async function createSessionToken(userId: string) {
   return new SignJWT({})
     .setProtectedHeader({ alg: 'HS256' })
     .setAudience(jwtAudience)
-    .setExpirationTime(serverEnv.APP_SESSION_TTL)
+    .setExpirationTime('30d')
     .setIssuedAt()
     .setIssuer(jwtIssuer)
     .setSubject(userId)
