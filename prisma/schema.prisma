@@ -31,7 +31,7 @@ model Vault {
   icon String?
 
   testAuth       String
-  lastAccessedAt DateTime @default(now())
+  lastAccessedAt DateTime?
 
   ownerId String
   owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
