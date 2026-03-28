@@ -24,3 +24,7 @@ export const useAuthStore = create(
     })
   )
 )
+
+export function useAuthenticatedUser() {
+  return useAuthStore((state) => state.user)!
+}

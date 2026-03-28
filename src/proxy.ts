@@ -6,8 +6,6 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const hasSession = Boolean(request.cookies.get(SESSION_COOKIE_NAME)?.value)
 
-  console.log({ pathname, hasSession })
-
   if (hasSession && pathname === '/') {
     return NextResponse.redirect(new URL('/vault', request.url))
   }

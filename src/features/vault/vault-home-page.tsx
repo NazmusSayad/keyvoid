@@ -1,7 +1,6 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Spinner } from '@/components/ui/spinner'
 import { queryClient } from '@/lib/query-client'
 import { signOutAction } from '@/server/auth/session'
 import { useAuthStore } from '@/store/use-auth-store'
@@ -10,7 +9,6 @@ import { useSearchParams } from 'next/navigation'
 
 export function VaultHomePage() {
   const searchParams = useSearchParams()
-  const status = useAuthStore((state) => state.status)
   const user = useAuthStore((state) => state.user)
   const clearSession = useAuthStore((state) => state.clearSession)
   const signOutMutation = useMutation({
@@ -23,19 +21,9 @@ export function VaultHomePage() {
   const error = searchParams.get('error')
   const notice = searchParams.get('notice')
 
-  if (status === 'loading') {
-    return (
-      <main className="bg-background text-foreground min-h-screen px-6 py-10">
-        <div className="mx-auto flex min-h-[60vh] max-w-md items-center justify-center">
-          <Spinner className="text-muted-foreground size-5" />
-        </div>
-      </main>
-    )
-  }
-
   if (user) {
     return (
-      <main className="bg-background text-foreground min-h-screen px-6 py-10">
+      <main className="bg-background text-foreground px-6 py-10">
         <div className="mx-auto max-w-md">
           <div className="border-border bg-card rounded-3xl border p-8">
             <div className="space-y-1">
@@ -70,7 +58,7 @@ export function VaultHomePage() {
   }
 
   return (
-    <main className="bg-background text-foreground min-h-screen px-6 py-10">
+    <main className="bg-background text-foreground px-6 py-10">
       <div className="mx-auto max-w-md">
         <div className="border-border bg-card rounded-3xl border p-8">
           <div className="space-y-2">

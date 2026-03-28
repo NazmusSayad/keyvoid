@@ -1,12 +1,28 @@
+import {
+  BetterScrollAreaContent,
+  BetterScrollAreaProvider,
+} from '@/components/ui/better-scroll-area'
+import { cn } from '@/lib/utils'
 import { PropsWithChildren } from 'react'
+import { useMediaQuery } from 'usehooks-ts'
 import { VaultSidebarDesktop } from './vault-sidebar-desktop'
+import { VaultSidebarMobile } from './vault-sidebar-mobile'
 
 export function VaultLayout({ children }: PropsWithChildren) {
-  return (
-    <main className="grid min-h-full grid-cols-[auto_1fr]">
-      <VaultSidebarDesktop />
+  const isMobile = useMediaQuery('(max-width: 45rem)')
 
-      <div>{children}</div>
+  return (
+    <main
+      className={cn(
+        'grid min-h-screen grid-cols-[auto_1fr]',
+        isMobile && 'grid-cols-1 grid-rows-[auto_1fr]'
+      )}
+    >
+      {isMobile ? <VaultSidebarMobile /> : <VaultSidebarDesktop />}
+
+      <BetterScrollAreaProvider>
+        <BetterScrollAreaContent>{children}</BetterScrollAreaContent>
+      </BetterScrollAreaProvider>
     </main>
   )
 }
