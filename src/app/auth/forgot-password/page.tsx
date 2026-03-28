@@ -98,7 +98,7 @@ export default function ForgotPasswordPage() {
 
           <div className="mt-6">
             <Link
-              href="/login"
+              href="/auth/login"
               className="text-primary text-sm underline-offset-4 hover:underline"
             >
               Back to sign in
