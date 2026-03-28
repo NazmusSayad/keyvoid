@@ -544,7 +544,7 @@
       "x": 1657.0163487025675,
       "y": 181.79357474190846,
       "width": 991.0477730887275,
-      "height": 1309.3330339704232,
+      "height": 1385.0430573988551,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -558,11 +558,11 @@
       "index": "aF",
       "roundness": null,
       "seed": 719026651,
-      "version": 980,
-      "versionNonce": 1509977147,
+      "version": 1001,
+      "versionNonce": 365572277,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1774738363315,
+      "updated": 1774738467744,
       "link": null,
       "locked": false
     },
@@ -1216,7 +1216,7 @@
       "x": 1745.1589529854914,
       "y": 1058.983928862072,
       "width": 405.23812430245516,
-      "height": 91,
+      "height": 118,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1230,8 +1230,8 @@
       "index": "ad",
       "roundness": null,
       "seed": 844271893,
-      "version": 394,
-      "versionNonce": 24767995,
+      "version": 395,
+      "versionNonce": 35295733,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1247,17 +1247,17 @@
           "type": "arrow"
         }
       ],
-      "updated": 1774738363315,
+      "updated": 1774738454422,
       "link": null,
       "locked": false
     },
     {
       "id": "gMpd2aOjX2zAwl7pDQIQb",
       "type": "text",
-      "x": 1759.5381774902344,
+      "x": 1752.4282989501955,
       "y": 1063.983928862072,
-      "width": 376.47967529296875,
-      "height": 81,
+      "width": 390.6994323730469,
+      "height": 108,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1271,30 +1271,30 @@
       "index": "adV",
       "roundness": null,
       "seed": 1665816219,
-      "version": 376,
-      "versionNonce": 564164251,
+      "version": 438,
+      "versionNonce": 497305275,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1774738363315,
+      "updated": 1774738463768,
       "link": null,
       "locked": false,
-      "text": "Get all the records from db, and decrypt\n`data` using `VAULT_ENCRYPTION_KEY`.\nThen send that to the client",
+      "text": "Get all the records from db, and decrypt\n`data` using `VAULT_ENCRYPTION_KEY`.\nThen send that to the client (this is just one\nlevel decrypted not the original data)",
       "fontSize": 20,
       "fontFamily": 6,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "1lUVfjgkIj_sAdleezbIF",
-      "originalText": "Get all the records from db, and decrypt `data` using `VAULT_ENCRYPTION_KEY`.\nThen send that to the client",
+      "originalText": "Get all the records from db, and decrypt `data` using `VAULT_ENCRYPTION_KEY`.\nThen send that to the client (this is just one level decrypted not the original data)",
       "autoResize": true,
       "lineHeight": 1.35
     },
     {
       "id": "I0ZxXyJRFNBfhsvZMxt4B",
       "type": "arrow",
-      "x": 1937.1587092357495,
-      "y": 1151.3649393717453,
-      "width": 0.4904142940752081,
-      "height": 63.136941283055194,
+      "x": 1944.5904191106572,
+      "y": 1180.1625812535801,
+      "width": 0.7225967568078886,
+      "height": 69.1751736632225,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1310,11 +1310,11 @@
         "type": 2
       },
       "seed": 523291701,
-      "version": 971,
-      "versionNonce": 919643637,
+      "version": 1174,
+      "versionNonce": 451819765,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1774738364041,
+      "updated": 1774738476668,
       "link": null,
       "locked": false,
       "points": [
@@ -1323,19 +1323,19 @@
           0
         ],
         [
-          0.4904142940752081,
-          63.136941283055194
+          0.7225967568078886,
+          69.1751736632225
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "1lUVfjgkIj_sAdleezbIF",
-        "focus": 0.054113013898299235,
-        "gap": 1.3810105096733878
+        "focus": 0.01888011835155855,
+        "gap": 3.1786523915081943
       },
       "endBinding": {
         "elementId": "va3gssxQSLFeY8BrjgmSC",
-        "focus": 0.011695043744978787,
+        "focus": 0.013575523627557876,
         "gap": 5.722309209262999
       },
       "startArrowhead": null,
@@ -1345,8 +1345,8 @@
     {
       "id": "va3gssxQSLFeY8BrjgmSC",
       "type": "ellipse",
-      "x": 1765.396728515625,
-      "y": 1220.2219950358078,
+      "x": 1773.0606208532654,
+      "y": 1255.05786929781,
       "width": 342.3810686383924,
       "height": 233.38089425223188,
       "angle": 0,
@@ -1362,8 +1362,8 @@
       "index": "ah",
       "roundness": null,
       "seed": 714224021,
-      "version": 951,
-      "versionNonce": 813617435,
+      "version": 1044,
+      "versionNonce": 1739099829,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1379,15 +1379,15 @@
           "type": "arrow"
         }
       ],
-      "updated": 1774738363315,
+      "updated": 1774738474223,
       "link": null,
       "locked": false
     },
     {
       "id": "qAsK3Prw58uOeb7RNJyeT",
       "type": "text",
-      "x": 1824.1974313927694,
-      "y": 1269.3998356993568,
+      "x": 1831.8613237304098,
+      "y": 1304.235709961359,
       "width": 224.6796875,
       "height": 135,
       "angle": 0,
@@ -1403,11 +1403,11 @@
       "index": "ahV",
       "roundness": null,
       "seed": 820066037,
-      "version": 799,
-      "versionNonce": 1616639419,
+      "version": 892,
+      "versionNonce": 1903095829,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1774738363315,
+      "updated": 1774738474223,
       "link": null,
       "locked": false,
       "text": "Save the `auth` (pin) into\na key:value in memory\nzustand store. So nex\ntime opening that vault\nshould not ask for pin",
@@ -1637,10 +1637,10 @@
     {
       "id": "XG398nwgmCiEBKW8yhh2d",
       "type": "arrow",
-      "x": 2025.3898701439475,
-      "y": 1236.080513210803,
-      "width": 880.5502203072379,
-      "height": 879.6468087366369,
+      "x": 2030.2731150194709,
+      "y": 1269.7964878327052,
+      "width": 877.3596855530427,
+      "height": 913.1585378005767,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -1656,11 +1656,11 @@
         "type": 2
       },
       "seed": 867857557,
-      "version": 701,
-      "versionNonce": 1937212277,
+      "version": 794,
+      "versionNonce": 914861781,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1774738364041,
+      "updated": 1774738474223,
       "link": null,
       "locked": false,
       "points": [
@@ -1669,8 +1669,8 @@
           0
         ],
         [
-          880.5502203072379,
-          -879.6468087366369
+          877.3596855530427,
+          -913.1585378005767
         ]
       ],
       "lastCommittedPoint": null,
@@ -1836,11 +1836,11 @@
       "index": "aw",
       "roundness": null,
       "seed": 1142029845,
-      "version": 548,
-      "versionNonce": 1334833557,
+      "version": 576,
+      "versionNonce": 2040288795,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1774738270254,
+      "updated": 1774738541168,
       "link": null,
       "locked": false
     },

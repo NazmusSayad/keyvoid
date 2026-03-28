@@ -1,5 +1,12 @@
 type EncryptionOptions = {
+  /**
+   * The key used for encryption or decryption. This is the secret that should be shared between the encrypting and decrypting parties.
+   */
   key: string
+
+  /**
+   * The plaintext data to be encrypted.
+   */
   data: string
 }
 
