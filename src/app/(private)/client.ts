@@ -3,6 +3,6 @@
 import dynamic from 'next/dynamic'
 
 export const PrivateLayoutClient = dynamic(
-  () => import('./private-layout').then((mod) => mod.PrivateLayout),
+  () => import('@/components/private-layout').then((mod) => mod.PrivateLayout),
   { ssr: false }
 )

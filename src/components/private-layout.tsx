@@ -1,22 +1,20 @@
 'use client'
 
+import { LoadingPage } from '@/components/loading-page'
 import { useAuthStore } from '@/store/use-auth-store'
+import { redirect } from 'next/navigation'
 import type { PropsWithChildren } from 'react'
 
 export function PrivateLayout({ children }: PropsWithChildren) {
   const status = useAuthStore((state) => state.status)
 
-  if (status === 'unauthenticated') {
-    return <div>Unauthorized</div>
-  }
-
   if (status === 'loading') {
-    return <div>Loading...</div>
+    return <LoadingPage />
   }
 
   if (status === 'authenticated') {
     return children
   }
 
-  return 'Something went wrong'
+  redirect('/auth/sign-in')
 }

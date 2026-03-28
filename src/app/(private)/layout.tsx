@@ -1,5 +1,5 @@
-import { PrivateLayoutClient } from '@/components/private-layout.client'
 import type { Metadata } from 'next'
+import { PrivateLayoutClient } from './client'
 
 export const metadata: Metadata = {
   robots: {
