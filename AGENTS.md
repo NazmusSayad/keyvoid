@@ -1,6 +1,6 @@
 ## Project
 
-- Do not start dev server or build entire project after completing a task.
+- NEVER start a dev server (`npm run dev`) or build the project (`npm run build`). The user will do that themselves.
 
 ## UI/UX
 
