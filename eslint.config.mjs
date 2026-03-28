@@ -106,7 +106,7 @@ export default defineConfig([
       'check-file/folder-naming-convention': [
         2,
         { '*/**': 'KEBAB_CASE' },
-        { ignoreWords: ['__tests__', '__trash__', '.gql'] },
+        { ignoreWords: ['__tests__', '__trash__', '.db'] },
       ],
       'check-file/filename-naming-convention': [
         2,
