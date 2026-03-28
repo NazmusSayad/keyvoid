@@ -4,8 +4,8 @@ import {
   getCodeAuthenticationOptions,
   getEmailVerificationAuthenticationOptions,
   workos,
-} from '@/server/auth'
-import { getErrorDetails } from '@/server/auth-helpers'
+} from '@/server/auth/auth'
+import { getErrorDetails } from '@/server/auth/auth-helpers'
 import { NextResponse } from 'next/server'
 
 function getCallbackErrorMessage(

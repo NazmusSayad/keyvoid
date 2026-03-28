@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { queryClient } from '@/lib/query-client'
-import { signOutAction } from '@/server/actions/auth.actions'
+import { signOutAction } from '@/server/auth/auth.actions'
 import { useAuthStore } from '@/store/use-auth-store'
 import { useMutation } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'

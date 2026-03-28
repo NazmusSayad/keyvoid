@@ -1,6 +1,6 @@
 'use client'
 
-import type { SessionUser } from '@/server/actions/auth.actions'
+import type { SessionUser } from '@/server/auth/auth.actions'
 import { create } from 'zustand'
 import { combine } from 'zustand/middleware'
 

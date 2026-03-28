@@ -8,7 +8,7 @@ import {
   getFriendlyAuthErrorMessage,
   getPathnameWithSearch,
   getRequestMetadataFromHeaders,
-} from '@/server/auth-helpers'
+} from '@/server/auth/auth-helpers'
 import {
   WorkOS,
   type AuthenticateWithSessionCookieFailureReason,

@@ -11,7 +11,7 @@ import {
   getPasswordAuthenticationOptionsFromMetadata,
   getPendingAuthState,
   workos,
-} from '@/server/auth'
+} from '@/server/auth/auth'
 import { z } from 'zod'
 
 const signInSchema = z.object({

@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { queryClient } from '@/lib/query-client'
-import { signInAction, verifyEmailAction } from '@/server/actions/auth.actions'
+import { signInAction, verifyEmailAction } from '@/server/auth/auth.actions'
 import { useAuthStore } from '@/store/use-auth-store'
 import { GithubIcon, GoogleIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
