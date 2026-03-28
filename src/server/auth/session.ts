@@ -69,15 +69,15 @@ async function verifySessionToken() {
 
 function isPasswordChangeNewerThanToken(
   appUser: {
-    passwordChangedAt: Date | null
+    authChangedAt: Date | null
   },
   issuedAt?: number
 ) {
-  if (!appUser.passwordChangedAt || typeof issuedAt !== 'number') {
+  if (!appUser.authChangedAt || typeof issuedAt !== 'number') {
     return false
   }
 
-  return issuedAt < Math.floor(appUser.passwordChangedAt.getTime() / 1000)
+  return issuedAt < Math.floor(appUser.authChangedAt.getTime() / 1000)
 }
 
 async function syncAppUser(workosUser: User, options?: { name?: string }) {

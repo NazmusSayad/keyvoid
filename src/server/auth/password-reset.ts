@@ -52,7 +52,7 @@ export async function resetPasswordAction(
         workosId: user.id,
       },
       data: {
-        passwordChangedAt: new Date(),
+        authChangedAt: new Date(),
         isVerified: user.emailVerified,
       },
     })
