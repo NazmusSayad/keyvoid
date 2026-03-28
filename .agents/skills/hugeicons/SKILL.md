@@ -13,29 +13,17 @@ import { HugeiconsIcon } from '@hugeicons/react'
 ;<HugeiconsIcon icon={Settings02Icon} className="size-4" />
 ```
 
-## Required props
+### Common Props
 
-- `icon` - The icon component imported from `@hugeicons/core-free-icons`.
+- `icon` Required. The icon to render, imported from `@hugeicons/core-free-icons`.
 
-## Patterns
+- `className` Optional. Additional CSS classes to apply to the icon only if needed.
 
-Size with Tailwind classes:
+- Also supports all props of the underlying `svg` element, such as `strokeWidth`, `fill`, etc.
 
-```tsx
-<HugeiconsIcon icon={Settings02Icon} className="size-4" />
-<HugeiconsIcon icon={CpuIcon} className="size-[1em]" strokeWidth={1} />
-```
-
-Use a spinner icon for loading:
+## Example
 
 ```tsx
-<HugeiconsIcon icon={Loading03Icon} className="size-7 animate-spin" />
-```
-
-For icon-only buttons, label the button:
-
-```tsx
-<button type="button" aria-label="Close">
-  <HugeiconsIcon icon={Cancel01Icon} className="size-4" />
-</button>
+<HugeiconsIcon icon={Settings02Icon} className="size-[1em]" />
+<HugeiconsIcon icon={CpuIcon} className="size-4" strokeWidth={1} />
 ```
