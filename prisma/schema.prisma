@@ -32,10 +32,10 @@ model Vault {
   ownerId String
   owner   User   @relation(fields: [ownerId], references: [id])
 
-  secretRecords SecretRecord[]
+  vaultRecords VaultRecord[]
 }
 
-model SecretRecord {
+model VaultRecord {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
