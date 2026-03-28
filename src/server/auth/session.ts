@@ -1,4 +1,4 @@
-import 'server-only'
+'use server'
 
 import { serverEnv } from '@/env.server'
 import { prisma } from '@/server/.db'
@@ -156,7 +156,7 @@ export async function markPasswordChanged(workosUser: User) {
   })
 }
 
-export async function getCurrentSessionUser() {
+async function getCurrentSessionUser() {
   const payload = await verifySessionToken()
 
   if (!payload?.sub) {
@@ -180,13 +180,13 @@ export async function getCurrentSessionUser() {
   return serializeSessionUser(appUser)
 }
 
-export async function getSession() {
+export async function getSessionAction() {
   return {
     user: await getCurrentSessionUser(),
   }
 }
 
-export async function signOut() {
+export async function signOutAction() {
   await clearPendingAuthState()
   await clearSessionCookie()
 

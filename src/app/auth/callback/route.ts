@@ -1,10 +1,10 @@
 import { getErrorDetails } from '@/server/auth/auth-helpers'
 import { createAuthenticationSuccessResponse } from '@/server/auth/session'
 import {
+  getCodeAuthenticationOptions,
   getEmailVerificationAuthenticationOptions,
   workos,
 } from '@/server/auth/shared'
-import { authenticateWithCode } from '@/server/auth/social'
 import { createAuthenticationErrorResponse } from '@/server/auth/verification'
 import { NextResponse } from 'next/server'
 
@@ -42,7 +42,9 @@ export async function GET(request: Request) {
   }
 
   try {
-    const authentication = await authenticateWithCode(request, code)
+    const authentication = await workos.userManagement.authenticateWithCode(
+      getCodeAuthenticationOptions(request, code)
+    )
 
     return createAuthenticationSuccessResponse(authentication.user)
   } catch (error) {
@@ -87,7 +89,10 @@ export async function GET(request: Request) {
           })
 
           try {
-            const authentication = await authenticateWithCode(request, code)
+            const authentication =
+              await workos.userManagement.authenticateWithCode(
+                getCodeAuthenticationOptions(request, code)
+              )
 
             return createAuthenticationSuccessResponse(authentication.user)
           } catch {}

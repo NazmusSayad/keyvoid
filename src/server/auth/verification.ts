@@ -1,4 +1,4 @@
-import 'server-only'
+'use server'
 
 import {
   getErrorDetails,
@@ -123,7 +123,9 @@ export async function createAuthenticationErrorResponse(
   )
 }
 
-export async function verifyEmail(input: z.infer<typeof verifyEmailSchema>) {
+export async function verifyEmailAction(
+  input: z.infer<typeof verifyEmailSchema>
+) {
   const body = verifyEmailSchema.parse(input)
   const pendingAuthState = await getPendingAuthState()
 
