@@ -1,36 +1,32 @@
 import 'server-only'
 
-import { serverEnv } from '@/env.server'
 import type { PendingAuthState } from '@/server/auth/types'
-import ms from 'ms'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-
-const sessionCookieName = 'vault-app-session'
-const pendingAuthCookieName = 'vault-workos-pending-auth'
-
-const sessionMaxAge = ms('30d')
-const secureCookies = serverEnv.APP_URL.startsWith('https://')
-
-const sessionMaxAgeInSeconds = Math.floor(sessionMaxAge / 1000)
+import {
+  PENDING_AUTH_COOKIE_NAME,
+  SECURE_COOKIES,
+  SESSION_COOKIE_NAME,
+  SESSION_MAX_AGE_SECONDS,
+} from '../constants'
 
 export async function getSessionCookieValue() {
   const cookieStore = await cookies()
 
-  return cookieStore.get(sessionCookieName)?.value ?? ''
+  return cookieStore.get(SESSION_COOKIE_NAME)?.value ?? ''
 }
 
 export async function setSessionCookie(token: string) {
   const cookieStore = await cookies()
 
   cookieStore.set({
-    name: sessionCookieName,
     value: token,
     httpOnly: true,
-    maxAge: sessionMaxAgeInSeconds,
     path: '/',
     sameSite: 'lax',
-    secure: secureCookies,
+    name: SESSION_COOKIE_NAME,
+    secure: SECURE_COOKIES,
+    maxAge: SESSION_MAX_AGE_SECONDS,
   })
 }
 
@@ -38,13 +34,13 @@ export async function clearSessionCookie() {
   const cookieStore = await cookies()
 
   cookieStore.set({
-    name: sessionCookieName,
+    name: SESSION_COOKIE_NAME,
     value: '',
     httpOnly: true,
     maxAge: 0,
     path: '/',
     sameSite: 'lax',
-    secure: secureCookies,
+    secure: SECURE_COOKIES,
   })
 }
 
@@ -53,19 +49,19 @@ export function setResponseSessionCookie(
   token: string
 ) {
   response.cookies.set({
-    name: sessionCookieName,
+    name: SESSION_COOKIE_NAME,
     value: token,
     httpOnly: true,
-    maxAge: sessionMaxAgeInSeconds,
+    maxAge: SESSION_MAX_AGE_SECONDS,
     path: '/',
     sameSite: 'lax',
-    secure: secureCookies,
+    secure: SECURE_COOKIES,
   })
 }
 
 export async function getPendingAuthState() {
   const cookieStore = await cookies()
-  const value = cookieStore.get(pendingAuthCookieName)?.value
+  const value = cookieStore.get(PENDING_AUTH_COOKIE_NAME)?.value
 
   if (!value) {
     return null
@@ -98,13 +94,13 @@ export async function setPendingAuthState(state: PendingAuthState) {
   const cookieStore = await cookies()
 
   cookieStore.set({
-    name: pendingAuthCookieName,
+    name: PENDING_AUTH_COOKIE_NAME,
     value: JSON.stringify(state),
     httpOnly: true,
     maxAge: 60 * 10,
     path: '/',
     sameSite: 'lax',
-    secure: secureCookies,
+    secure: SECURE_COOKIES,
   })
 }
 
@@ -112,24 +108,24 @@ export async function clearPendingAuthState() {
   const cookieStore = await cookies()
 
   cookieStore.set({
-    name: pendingAuthCookieName,
+    name: PENDING_AUTH_COOKIE_NAME,
     value: '',
     httpOnly: true,
     maxAge: 0,
     path: '/',
     sameSite: 'lax',
-    secure: secureCookies,
+    secure: SECURE_COOKIES,
   })
 }
 
 export function clearResponsePendingAuthCookie(response: NextResponse) {
   response.cookies.set({
-    name: pendingAuthCookieName,
+    name: PENDING_AUTH_COOKIE_NAME,
     value: '',
     httpOnly: true,
     maxAge: 0,
     path: '/',
     sameSite: 'lax',
-    secure: secureCookies,
+    secure: SECURE_COOKIES,
   })
 }
