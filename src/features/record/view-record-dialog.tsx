@@ -7,12 +7,14 @@ import {
   BetterDialogContent,
 } from '@/components/ui/better-dialog'
 import { Skeleton } from '@/components/ui/skeleton'
+import { EncryptionClient } from '@/lib/encryption/encryption.client'
 import { queryClient } from '@/lib/query-client'
 import { RecordType } from '@/server/.db/browser'
 import {
   getVaultRecordAction,
   updateVaultRecordAction,
 } from '@/server/vault/vault-record'
+import { useAuthStore } from '@/store/use-auth-store'
 import {
   Key02Icon,
   NoteIcon,
@@ -24,6 +26,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { RecordEditor, type RecordField } from './record-editor'
+
+const encryption = new EncryptionClient()
 
 function getRecordTypeIcon(type: RecordType) {
   if (type === RecordType.PASSWORD) {
@@ -64,9 +68,42 @@ type RecordDialogContentProps = {
   vaultId: string
 }
 
+type DecryptedRecord = {
+  id: string
+  createdAt: string
+  updatedAt: string
+  name: string
+  type: RecordType
+  data: RecordField[]
+  vaultId: string
+}
+
 type EditableRecordProps = {
-  record: Awaited<ReturnType<typeof getVaultRecordAction>>['record']
+  record: DecryptedRecord
   vault: Awaited<ReturnType<typeof getVaultRecordAction>>['vault']
+}
+
+function isRecordField(value: unknown): value is RecordField {
+  return (
+    Array.isArray(value) &&
+    value.length === 2 &&
+    typeof value[0] === 'string' &&
+    typeof value[1] === 'string'
+  )
+}
+
+function isRecordData(value: unknown): value is RecordField[] {
+  return Array.isArray(value) && value.every(isRecordField)
+}
+
+function parseRecordData(value: string) {
+  const parsed = JSON.parse(value)
+
+  if (!isRecordData(parsed)) {
+    throw new Error('Invalid record data.')
+  }
+
+  return parsed
 }
 
 export function RecordDialog({ vaultId }: RecordDialogProps) {
@@ -97,9 +134,32 @@ export function RecordDialog({ vaultId }: RecordDialogProps) {
 }
 
 function RecordDialogContent({ recordId, vaultId }: RecordDialogContentProps) {
+  const auth = useAuthStore(
+    (state) => state.vaultAuthByVaultId[vaultId] ?? null
+  )
   const recordQuery = useQuery({
-    queryFn: () => getVaultRecordAction({ recordId, vaultId }),
-    queryKey: ['vault-record', vaultId, recordId],
+    enabled: Boolean(auth),
+    queryFn: async () => {
+      const result = await getVaultRecordAction({
+        auth: auth!,
+        recordId,
+        vaultId,
+      })
+
+      return {
+        record: {
+          ...result.record,
+          data: parseRecordData(
+            await encryption.decrypt({
+              key: auth!,
+              data: result.record.data,
+            })
+          ),
+        },
+        vault: result.vault,
+      }
+    },
+    queryKey: ['vault-record', vaultId, recordId, auth],
   })
 
   if (recordQuery.isPending) {
@@ -146,24 +206,41 @@ function RecordDialogContent({ recordId, vaultId }: RecordDialogContentProps) {
 }
 
 function EditableRecord({ record, vault }: EditableRecordProps) {
+  const auth = useAuthStore(
+    (state) => state.vaultAuthByVaultId[vault.id] ?? null
+  )
   const formRef = useRef<HTMLFormElement>(null)
   const [data, setData] = useState<RecordField[]>(record.data)
   const [error, setError] = useState('')
   const [name, setName] = useState(record.name)
   const [type, setType] = useState<RecordType>(record.type)
   const updateRecordMutation = useMutation({
-    mutationFn: updateVaultRecordAction,
-    onSuccess: async (result) => {
-      setData(result.record.data)
+    mutationFn: async (input: {
+      data: RecordField[]
+      name: string
+      type: RecordType
+    }) => {
+      if (!auth) {
+        throw new Error('Unlock this vault first.')
+      }
+
+      return updateVaultRecordAction({
+        auth,
+        data: await encryption.encrypt({
+          key: auth,
+          data: JSON.stringify(input.data),
+        }),
+        name: input.name,
+        recordId: record.id,
+        type: input.type,
+        vaultId: vault.id,
+      })
+    },
+    onSuccess: async () => {
       setError('')
-      setName(result.record.name)
-      setType(result.record.type)
 
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['vault', vault.id] }),
-        queryClient.invalidateQueries({
-          queryKey: ['vault-records', vault.id],
-        }),
         queryClient.invalidateQueries({ queryKey: ['vault-record', vault.id] }),
         queryClient.invalidateQueries({ queryKey: ['vaults'] }),
       ])
@@ -214,9 +291,7 @@ function EditableRecord({ record, vault }: EditableRecordProps) {
               {
                 data,
                 name,
-                recordId: record.id,
                 type,
-                vaultId: vault.id,
               },
               {
                 onError: (mutationError) => {

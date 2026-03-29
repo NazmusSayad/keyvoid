@@ -24,10 +24,7 @@ import {
 import { HugeiconsIcon } from '@hugeicons/react'
 import type { FormEvent, RefObject } from 'react'
 
-export type RecordField = {
-  key: string
-  value: string
-}
+export type RecordField = [key: string, value: string]
 
 type RecordEditorProps = {
   data: RecordField[]
@@ -48,10 +45,7 @@ type RecordEditorProps = {
 const recordTypes = [RecordType.PASSWORD, RecordType.API_KEY, RecordType.NOTE]
 
 export function createEmptyRecordField(): RecordField {
-  return {
-    key: '',
-    value: '',
-  }
+  return ['', '']
 }
 
 function getRecordTypeIcon(type: RecordType) {
@@ -153,7 +147,7 @@ export function RecordEditor({
         <div className="mt-6 space-y-4">
           {data.map((field, index) => (
             <div
-              key={`${index}-${field.key}`}
+              key={`${index}-${field[0]}`}
               className="border-border bg-background grid gap-3 rounded-[1.5rem] border p-4 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,1fr)_auto] lg:items-start"
             >
               <div className="space-y-2">
@@ -166,13 +160,13 @@ export function RecordEditor({
                 <Input
                   id={`record-key-${index}`}
                   placeholder="username"
-                  value={field.key}
+                  value={field[0]}
                   disabled={disabled}
                   onChange={(event) => {
                     onDataChange(
                       data.map((item, itemIndex) =>
                         itemIndex === index
-                          ? { ...item, key: event.target.value }
+                          ? [event.target.value, item[1]]
                           : item
                       )
                     )
@@ -190,13 +184,13 @@ export function RecordEditor({
                 <Textarea
                   id={`record-value-${index}`}
                   placeholder="Enter the field value"
-                  value={field.value}
+                  value={field[1]}
                   disabled={disabled}
                   onChange={(event) => {
                     onDataChange(
                       data.map((item, itemIndex) =>
                         itemIndex === index
-                          ? { ...item, value: event.target.value }
+                          ? [item[0], event.target.value]
                           : item
                       )
                     )

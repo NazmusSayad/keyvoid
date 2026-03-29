@@ -7,6 +7,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { queryClient } from '@/lib/query-client'
 import { createVaultAction } from '@/server/vault/vault'
+import { useAuthStore } from '@/store/use-auth-store'
 import { Add01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useMutation } from '@tanstack/react-query'
@@ -42,14 +43,16 @@ function VaultCreateDialogContent({
 }: VaultCreateDialogContentProps) {
   const formRef = useRef<HTMLFormElement>(null)
   const router = useRouter()
+  const setVaultAuth = useAuthStore((state) => state.setVaultAuth)
+  const [auth, setAuth] = useState('')
   const [icon, setIcon] = useState('')
   const [name, setName] = useState('')
-  const [testAuthHash, settestAuthHash] = useState('')
   const [error, setError] = useState('')
   const createVaultMutation = useMutation({
     mutationFn: createVaultAction,
-    onSuccess: async (result) => {
+    onSuccess: async (result, variables) => {
       onOpenChange(false)
+      setVaultAuth(result.vault.id, variables.auth)
 
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['vaults'] }),
@@ -79,9 +82,9 @@ function VaultCreateDialogContent({
 
           createVaultMutation.mutate(
             {
+              auth,
               icon,
               name,
-              testAuthHash,
             },
             {
               onError: (mutationError) => {
@@ -108,14 +111,15 @@ function VaultCreateDialogContent({
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium" htmlFor="vault-test-auth">
-            Test auth
+          <label className="text-sm font-medium" htmlFor="vault-auth">
+            Vault PIN
           </label>
           <Input
-            id="vault-test-auth"
-            placeholder="staging-master-key"
-            value={testAuthHash}
-            onChange={(event) => settestAuthHash(event.target.value)}
+            id="vault-auth"
+            type="password"
+            placeholder="Enter a vault PIN"
+            value={auth}
+            onChange={(event) => setAuth(event.target.value)}
           />
         </div>
 

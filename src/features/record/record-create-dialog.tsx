@@ -4,9 +4,11 @@ import {
   BetterDialog,
   BetterDialogContent,
 } from '@/components/ui/better-dialog'
+import { EncryptionClient } from '@/lib/encryption/encryption.client'
 import { queryClient } from '@/lib/query-client'
 import { RecordType } from '@/server/.db/browser'
 import { createVaultRecordAction } from '@/server/vault/vault-record'
+import { useAuthStore } from '@/store/use-auth-store'
 import { File01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useMutation } from '@tanstack/react-query'
@@ -18,7 +20,9 @@ import {
   RecordEditor,
   type RecordField,
 } from './record-editor'
-import { getRecordDialogHref } from './record-page'
+import { getRecordDialogHref } from './view-record-dialog'
+
+const encryption = new EncryptionClient()
 
 type RecordCreateDialogProps = {
   trigger: ReactNode
@@ -56,6 +60,9 @@ function RecordCreateDialogContent({
   onOpenChange,
   vaultId,
 }: RecordCreateDialogContentProps) {
+  const auth = useAuthStore(
+    (state) => state.vaultAuthByVaultId[vaultId] ?? null
+  )
   const formRef = useRef<HTMLFormElement>(null)
   const pathname = usePathname()
   const router = useRouter()
@@ -65,13 +72,31 @@ function RecordCreateDialogContent({
   const [name, setName] = useState('')
   const [type, setType] = useState<RecordType>(RecordType.NOTE)
   const createRecordMutation = useMutation({
-    mutationFn: createVaultRecordAction,
+    mutationFn: async (input: {
+      data: RecordField[]
+      name: string
+      type: RecordType
+    }) => {
+      if (!auth) {
+        throw new Error('Unlock this vault first.')
+      }
+
+      return createVaultRecordAction({
+        auth,
+        data: await encryption.encrypt({
+          key: auth,
+          data: JSON.stringify(input.data),
+        }),
+        name: input.name,
+        type: input.type,
+        vaultId,
+      })
+    },
     onSuccess: async (result) => {
       onOpenChange(false)
 
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['vault', vaultId] }),
-        queryClient.invalidateQueries({ queryKey: ['vault-records', vaultId] }),
         queryClient.invalidateQueries({ queryKey: ['vault-record', vaultId] }),
         queryClient.invalidateQueries({ queryKey: ['vaults'] }),
       ])
@@ -112,7 +137,6 @@ function RecordCreateDialogContent({
               data,
               name,
               type,
-              vaultId,
             },
             {
               onError: (mutationError) => {
