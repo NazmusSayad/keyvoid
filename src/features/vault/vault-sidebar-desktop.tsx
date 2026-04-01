@@ -2,7 +2,10 @@
 
 import { Loading } from '@/components/loading'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { BetterScrollArea } from '@/components/ui/better-scroll-area'
+import {
+  BetterScrollAreaContent,
+  BetterScrollAreaProvider,
+} from '@/components/ui/better-scroll-area'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -10,7 +13,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { cn } from '@/lib/utils'
 import { signOutAction } from '@/server/auth/session'
 import { getVaultsAction } from '@/server/vault/vault'
 import { useAuthStore } from '@/store/use-auth-store'
@@ -50,49 +52,59 @@ export function VaultSidebarDesktop() {
   }
 
   return (
-    <aside className="border-border bg-card grid h-screen w-[20rem] min-w-[20rem] grid-rows-[1fr_auto] border-r">
-      <BetterScrollArea>
-        <div className="px-4 py-4">
-          {!!vaultsQuery.data?.vaults.length && (
-            <nav className="space-y-2">
+    <aside className="border-border bg-card grid h-screen w-[16rem] grid-rows-[auto_1fr_auto] border-r">
+      <div>search</div>
+
+      {!!vaultsQuery.data?.vaults.length && (
+        <BetterScrollAreaProvider>
+          <BetterScrollAreaContent
+            style={{
+              maskImage: `linear-gradient(to bottom, transparent 0, black 12px, black calc(100% - 12px), transparent 100%)`,
+            }}
+          >
+            <ul className="flex flex-col gap-2 p-3">
               {vaultsQuery.data.vaults.map((vault) => {
                 const isActive = pathname.startsWith(`/vault/${vault.id}`)
 
                 return (
-                  <Link
-                    key={vault.id}
-                    href={`/vault/${vault.id}`}
-                    className={cn(
-                      'hover:bg-muted flex items-center gap-3 rounded-2xl px-4 py-3 text-sm transition-colors',
-                      isActive && 'bg-muted text-foreground font-medium'
-                    )}
-                  >
-                    <span className="bg-background flex size-9 items-center justify-center rounded-xl border text-sm font-semibold">
-                      {vault.icon?.trim() || vault.name.charAt(0).toUpperCase()}
-                    </span>
-                    <span className="truncate">{vault.name}</span>
-                  </Link>
+                  <li key={vault.id}>
+                    <Button
+                      asChild
+                      size="lg"
+                      className="w-full justify-start px-2"
+                      variant={isActive ? 'default' : 'ghost'}
+                    >
+                      <Link href={`/vault/${vault.id}`}>
+                        <span className="flex size-9 items-center justify-center overflow-hidden rounded-xl text-sm font-semibold uppercase">
+                          {vault.icon?.trim().charAt(0) ||
+                            vault.name.charAt(0).toUpperCase()}
+                        </span>
+
+                        <span className="truncate">{vault.name}</span>
+                      </Link>
+                    </Button>
+                  </li>
                 )
               })}
-            </nav>
-          )}
+            </ul>
+          </BetterScrollAreaContent>
+        </BetterScrollAreaProvider>
+      )}
 
-          {vaultsQuery.data?.vaults.length === 0 && (
-            <div className="flex h-full items-center justify-center">
-              <VaultCreateDialog
-                trigger={
-                  <Button>
-                    <HugeiconsIcon icon={WalletAdd01Icon} className="size-4" />
-                    Create new vault
-                  </Button>
-                }
-              />
-            </div>
-          )}
+      {vaultsQuery.data?.vaults.length === 0 && (
+        <div className="flex h-full items-center justify-center">
+          <VaultCreateDialog
+            trigger={
+              <Button>
+                <HugeiconsIcon icon={WalletAdd01Icon} className="size-4" />
+                Create new vault
+              </Button>
+            }
+          />
         </div>
-      </BetterScrollArea>
+      )}
 
-      <div className="flex flex-col gap-3 px-4 py-4">
+      <div className="flex flex-col gap-2 p-3">
         <VaultCreateDialog
           trigger={
             <Button variant="outline" className="w-full">
