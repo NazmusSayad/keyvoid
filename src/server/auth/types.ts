@@ -13,6 +13,8 @@ export type AuthFeedback = {
 
 export type SessionUser = {
   id: string
-  name: string
   isVerified: boolean
+
+  name: string
+  avatarUrl: string | null
 }
