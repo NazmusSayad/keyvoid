@@ -1,13 +1,10 @@
-import { ImageResponse } from 'next/og'
-
 import { Logo } from '@/components/brand/logo'
+import { ImageResponse } from 'next/og'
 
 export const size = {
   width: 128,
   height: 128,
 }
-
-export const contentType = 'image/png'
 
 export default function Icon() {
   return new ImageResponse(
