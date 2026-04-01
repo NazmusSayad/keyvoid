@@ -21,12 +21,9 @@ const jwtAudience = 'vault-app-session'
 const jwtIssuer = serverEnv.APP_URL
 const jwtSecret = new TextEncoder().encode(serverEnv.APP_SESSION_SECRET)
 
-function serializeSessionUser(appUser: {
-  id: string
-  name: string
-  isVerified: boolean
-}) {
+function serializeSessionUser(appUser: SessionUser) {
   return {
+    avatarUrl: appUser.avatarUrl,
     id: appUser.id,
     name: appUser.name,
     isVerified: appUser.isVerified,
