@@ -6,7 +6,7 @@ export function VaultUnauthedPage() {
   const { id, setSecret } = useVaultContext()
 
   return (
-    <div className="flex size-full items-center justify-center">
+    <div className="flex size-full min-h-[90vh] items-center justify-center">
       <Wrapper className="w-full" maxWidth="24rem">
         <VaultSecretForm vaultId={id} confirmSecret={setSecret} />
       </Wrapper>
