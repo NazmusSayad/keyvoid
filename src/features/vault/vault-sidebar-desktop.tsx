@@ -180,7 +180,10 @@ export function VaultSidebarDesktop() {
             </Button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end" className="w-[16rem]">
+          <DropdownMenuContent
+            align="end"
+            style={{ width: 'var(--radix-dropdown-menu-trigger-width)' }}
+          >
             <DropdownMenuItem asChild>
               <Link href="/account">Account</Link>
             </DropdownMenuItem>
