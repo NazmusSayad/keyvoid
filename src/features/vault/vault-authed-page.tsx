@@ -49,7 +49,7 @@ export function VaultAuthedPage() {
     <div className="grid size-full grid-rows-[auto_1fr]">
       <header>Vault Header</header>
 
-      <BetterScrollAreaFaded fadeSpace="16px">
+      <BetterScrollAreaFaded>
         <div className="bg-background text-foreground min-h-screen px-6 py-8 sm:px-8 sm:py-10">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
             <section className="from-card via-card to-muted/40 border-border overflow-hidden rounded-[2rem] border bg-gradient-to-br p-6 shadow-sm sm:p-8">

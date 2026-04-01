@@ -19,7 +19,7 @@ export function VaultHomePage() {
   })
 
   return (
-    <BetterScrollAreaFaded fadeSpace="16px">
+    <BetterScrollAreaFaded>
       <div className="bg-background text-foreground min-h-screen px-6 py-8 sm:px-8 sm:py-10">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
           <section className="from-card via-card to-muted/40 border-border grid gap-6 overflow-hidden rounded-[2rem] border bg-gradient-to-br p-6 shadow-sm sm:p-8 lg:grid-cols-[1.35fr_0.65fr] lg:items-end">
