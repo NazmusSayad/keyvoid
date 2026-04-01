@@ -197,11 +197,7 @@ export function VaultSidebarDesktop({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              size="lg"
-              variant="outline"
-              className="w-full justify-start gap-3 px-2"
-            >
+            <Button size="lg" variant="outline" className="w-full gap-3 px-2">
               <Avatar className="size-6">
                 <AvatarImage
                   src={user?.avatarUrl || undefined}
@@ -220,6 +216,7 @@ export function VaultSidebarDesktop({
             <DropdownMenuItem asChild>
               <Link href="/account">Account</Link>
             </DropdownMenuItem>
+
             <DropdownMenuItem
               variant="destructive"
               disabled={isSigningOut}
