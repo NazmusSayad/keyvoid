@@ -45,20 +45,9 @@ model VaultRecord {
   updatedAt DateTime @updatedAt
 
   name String
-  type RecordType
+  type String
   data Json // [key: string, value: string][]
 
   vaultId String
   vault   Vault  @relation(fields: [vaultId], references: [id], onDelete: Cascade)
-}
-
-enum RecordType {
-  PASSWORD
-  API_KEY
-  NOTE
-}
-
-enum OAuthProvider {
-  google
-  github
 }
