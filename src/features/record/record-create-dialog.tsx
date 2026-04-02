@@ -11,7 +11,6 @@ import { useAuthStore } from '@/store/use-auth-store'
 import { File01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useMutation } from '@tanstack/react-query'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { type ReactNode, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import {
@@ -19,7 +18,6 @@ import {
   RecordEditor,
   type RecordField,
 } from './record-editor'
-import { getRecordDialogHref } from './view-record-dialog'
 
 const encryption = new EncryptionClient()
 
@@ -63,9 +61,6 @@ function RecordCreateDialogContent({
     (state) => state.vaultAuthByVaultId[vaultId] ?? null
   )
   const formRef = useRef<HTMLFormElement>(null)
-  const pathname = usePathname()
-  const router = useRouter()
-  const searchParams = useSearchParams()
   const [data, setData] = useState<RecordField[]>(createInitialFields)
   const [error, setError] = useState('')
   const [name, setName] = useState('')
@@ -91,7 +86,7 @@ function RecordCreateDialogContent({
         vaultId,
       })
     },
-    onSuccess: async (result) => {
+    onSuccess: async () => {
       onOpenChange(false)
 
       await Promise.all([
@@ -101,7 +96,6 @@ function RecordCreateDialogContent({
       ])
 
       toast.success('Record created.')
-      router.push(getRecordDialogHref(pathname, searchParams, result.record.id))
     },
   })
 

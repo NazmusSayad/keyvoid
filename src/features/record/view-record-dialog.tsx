@@ -49,8 +49,8 @@ type RecordDialogProps = {
     name: string
     type: string
     updatedAt: string
-    vaultId: string
-    data: unknown
+    data?: Record<string, string>
+    metadata?: [string, string][]
   }[]
 }
 
@@ -60,8 +60,8 @@ type RecordDialogContentProps = {
     name: string
     type: string
     updatedAt: string
-    vaultId: string
-    data: unknown
+    data?: Record<string, string>
+    metadata?: [string, string][]
   } | null
   vault: {
     id: string
@@ -75,7 +75,6 @@ type DecryptedRecord = {
   name: string
   type: string
   data: RecordField[]
-  vaultId: string
 }
 
 type EditableRecordProps = {
@@ -86,35 +85,19 @@ type EditableRecordProps = {
   }
 }
 
-function isRecordField(value: unknown): value is RecordField {
-  return (
-    Array.isArray(value) &&
-    value.length === 2 &&
-    typeof value[0] === 'string' &&
-    typeof value[1] === 'string'
-  )
-}
-
-function isRecordData(value: unknown): value is RecordField[] {
-  return Array.isArray(value) && value.every(isRecordField)
-}
-
-function parseRecordData(value: string) {
-  const parsed = JSON.parse(value)
-
-  if (!isRecordData(parsed)) {
-    throw new Error('Invalid record data.')
+function parseRecordData(
+  value: [string, string][] | undefined,
+  map: Record<string, string> | undefined
+) {
+  if (value && value.length > 0) {
+    return value
   }
 
-  return parsed
-}
-
-function parseEncryptedRecordData(value: unknown) {
-  if (typeof value !== 'string') {
-    throw new Error('Invalid record data.')
+  if (!map) {
+    return []
   }
 
-  return value
+  return Object.entries(map)
 }
 
 export function RecordDialog({ vault, records }: RecordDialogProps) {
@@ -154,12 +137,7 @@ function RecordDialogContent({ record, vault }: RecordDialogContentProps) {
 
       return {
         ...record,
-        data: parseRecordData(
-          await encryption.decrypt({
-            key: auth!,
-            data: parseEncryptedRecordData(record.data),
-          })
-        ),
+        data: parseRecordData(record.metadata, record.data),
       }
     },
     queryKey: ['vault-record', vault.id, record?.id, record?.updatedAt, auth],

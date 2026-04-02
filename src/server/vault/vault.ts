@@ -37,15 +37,7 @@ export async function getVaultsAction() {
   })
 
   return {
-    vaults: vaults.map((vault) =>
-      PublicVault.parse({
-        id: vault.id,
-        createdAt: vault.createdAt.toISOString(),
-        updatedAt: vault.updatedAt.toISOString(),
-        name: vault.name,
-        icon: vault.icon,
-      })
-    ),
+    vaults: vaults.map((vault) => PublicVault.parse(vault)),
   }
 }
 
@@ -62,6 +54,4 @@ export async function createVaultAction(
       testAuthHash: createVaultAuthHash(body.auth),
     },
   })
-
-  return true
 }
