@@ -11,6 +11,12 @@ const serverEnvSchema = z.object({
 
   VAULT_HASH_KEY: z.string(),
   VAULT_ENCRYPTION_KEY: z.string(),
+
+  OAUTH_GOOGLE_CLIENT_ID: z.string(),
+  OAUTH_GOOGLE_CLIENT_SECRET: z.string(),
+
+  OAUTH_GITHUB_CLIENT_ID: z.string(),
+  OAUTH_GITHUB_CLIENT_SECRET: z.string(),
 })
 
 export const serverEnv = serverEnvSchema.parse({
