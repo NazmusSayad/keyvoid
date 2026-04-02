@@ -46,7 +46,9 @@ model VaultRecord {
 
   name String
   type String
-  data Json // [key: string, value: string][]
+
+  data     Json? // Record<string, string>
+  metadata Json? // [key: string, value: string][]
 
   vaultId String
   vault   Vault  @relation(fields: [vaultId], references: [id], onDelete: Cascade)

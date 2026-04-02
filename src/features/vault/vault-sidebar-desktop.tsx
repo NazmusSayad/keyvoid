@@ -91,7 +91,7 @@ export function VaultSidebarDesktop({
             </Button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="start">
             <DropdownMenuItem asChild>
               <Link href="/account">
                 <HugeiconsIcon icon={UserCircleIcon} /> Account
