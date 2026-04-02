@@ -1,46 +1,48 @@
+import { serverEnv } from '@/env.server'
+import { EncryptionServer } from '@/lib/encryption/encryption.server'
 import 'server-only'
 
-import { PublicRecordDataType, PublicRecordMetadataType } from '@/lib/schema'
-
-type EncryptRecordInput = {
-  data?: PublicRecordDataType | null
-  metadata?: PublicRecordMetadataType | null
-}
-
-type EncryptRecordOutput = {
-  data?: string
-  metadata?: string
-}
-
-export async function encryptRecord({
-  data,
-  metadata,
-}: EncryptRecordInput): Promise<EncryptRecordOutput> {
-  return {
-    data: data ? JSON.stringify(data) : undefined,
-    metadata: metadata ? JSON.stringify(metadata) : undefined,
-  }
-}
-
-type DecryptRecordInput = {
+type RecordData = {
   data?: string | null
   metadata?: string | null
 }
 
-type DecryptRecordOutput = {
-  data?: PublicRecordDataType
-  metadata?: PublicRecordMetadataType
+const encryption = new EncryptionServer()
+
+export async function encryptRecord({
+  data,
+  metadata,
+}: RecordData): Promise<RecordData> {
+  return {
+    data: data
+      ? await encryption.encrypt({ key: serverEnv.VAULT_ENCRYPTION_KEY, data })
+      : undefined,
+
+    metadata: metadata
+      ? await encryption.encrypt({
+          key: serverEnv.VAULT_ENCRYPTION_KEY,
+          data: metadata,
+        })
+      : undefined,
+  }
 }
 
-export async function decryptRecord(
-  input: DecryptRecordInput
-): Promise<DecryptRecordOutput> {
+export async function decryptRecord(input: RecordData): Promise<RecordData> {
   return {
-    data: typeof input.data === 'string' ? JSON.parse(input.data) : undefined,
+    data:
+      typeof input.data === 'string'
+        ? await encryption.decrypt({
+            key: serverEnv.VAULT_ENCRYPTION_KEY,
+            data: input.data,
+          })
+        : undefined,
 
     metadata:
       typeof input.metadata === 'string'
-        ? JSON.parse(input.metadata)
+        ? await encryption.decrypt({
+            key: serverEnv.VAULT_ENCRYPTION_KEY,
+            data: input.metadata,
+          })
         : undefined,
   }
 }

@@ -1,12 +1,7 @@
 'use server'
 
 import { serverEnv } from '@/env.server'
-import {
-  PublicRecord,
-  PublicRecordData,
-  PublicRecordMetadata,
-  PublicVault,
-} from '@/lib/schema'
+import { PublicRecord, PublicVault } from '@/lib/schema'
 import { requireCurrentSessionUser } from '@/server/auth/session'
 import { prisma } from '@/server/db'
 import { createHmac, timingSafeEqual } from 'node:crypto'
@@ -16,21 +11,21 @@ import { decryptRecord, encryptRecord } from '../lib/record-crypt'
 const createVaultRecordSchema = z.object({
   auth: z.string().trim().min(1, 'Enter a vault PIN.'),
   name: z.string().trim().min(1, 'Enter a record name.'),
-  type: z.string().trim().min(1, 'Type is required.'),
   vaultId: z.string().trim().min(1, 'Vault is required.'),
 
-  data: PublicRecordData.optional(),
-  metadata: PublicRecordMetadata.optional(),
+  type: z.string().optional(),
+  data: z.string().optional(),
+  metadata: z.string().optional(),
 })
 
 const updateVaultRecordSchema = z.object({
   name: z.string().trim().min(1, 'Enter a record name.'),
   recordId: z.string().trim().min(1, 'Record is required.'),
-  type: z.string().trim().min(1, 'Type is required.'),
   vaultId: z.string().trim().min(1, 'Vault is required.'),
 
-  data: PublicRecordData.optional(),
-  metadata: PublicRecordMetadata.optional(),
+  type: z.string().optional(),
+  data: z.string().optional(),
+  metadata: z.string().optional(),
 })
 
 const getVaultRecordsSchema = z.object({
