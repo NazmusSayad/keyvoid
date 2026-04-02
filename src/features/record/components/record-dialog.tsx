@@ -2,14 +2,14 @@ import {
   BetterDialog,
   BetterDialogContent,
 } from '@/components/ui/better-dialog'
-import { Vault, VaultRecord } from '@/server/db/.prisma/client'
+import { PublicRecordType, PublicVaultType } from '@/lib/schema'
 
 type RecordDialogProps = {
   open: boolean
   onOpenChange(open: boolean): void
 
-  vault: Vault
-  record: VaultRecord
+  vault: PublicVaultType
+  record: PublicRecordType
 }
 
 export function RecordDialog({ ...props }: RecordDialogProps) {
