@@ -4,13 +4,11 @@ import { serverEnv } from '@/env.server'
 import {
   clearSessionCookie,
   getSessionCookieValue,
-  setResponseSessionCookie,
   setSessionCookie,
 } from '@/server/auth/auth-state'
 import type { SessionUser } from '@/server/auth/types'
 import { prisma } from '@/server/db'
 import { SignJWT, jwtVerify } from 'jose'
-import { NextResponse } from 'next/server'
 
 const jwtAudience = 'vault-app-session'
 const jwtIssuer = serverEnv.APP_URL
@@ -83,22 +81,6 @@ export async function createSessionUser(appUser: {
   await setSessionCookie(await createSessionToken(appUser.id))
 
   return serializeSessionUser(appUser)
-}
-
-export async function createAuthenticationSuccessResponse(
-  appUser: { id: string },
-  options?: { returnTo?: string }
-) {
-  const response = NextResponse.redirect(
-    new URL(
-      options?.returnTo?.startsWith('/') ? options.returnTo : '/',
-      serverEnv.APP_URL
-    )
-  )
-
-  setResponseSessionCookie(response, await createSessionToken(appUser.id))
-
-  return response
 }
 
 async function getCurrentSessionUser() {

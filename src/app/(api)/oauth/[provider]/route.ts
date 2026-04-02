@@ -3,7 +3,7 @@ import {
   getDefaultNameFromEmail,
   normalizeEmail,
 } from '@/server/auth/auth-helpers'
-import { createAuthenticationSuccessResponse } from '@/server/auth/session'
+import { createSessionUser } from '@/server/auth/session'
 import { prisma } from '@/server/db'
 import { NextRequest, NextResponse } from 'next/server'
 import z from 'zod'
@@ -229,10 +229,8 @@ export async function GET(
       })
     }
 
-    return createAuthenticationSuccessResponse(
-      { id: user.id },
-      { returnTo: '/' }
-    )
+    await createSessionUser(user)
+    return NextResponse.redirect(new URL('/', request.url))
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : 'An unknown error occurred.'
