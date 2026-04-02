@@ -2,14 +2,15 @@ import z from 'zod'
 
 export const SessionUser = z.object({
   id: z.string(),
+
   name: z.string(),
   email: z.string(),
+
   avatarUrl: z.string().optional(),
 })
 
 export const PublicVault = z.object({
   id: z.string(),
-
   createdAt: z.string(),
   updatedAt: z.string(),
 
@@ -19,7 +20,6 @@ export const PublicVault = z.object({
 
 export const PublicRecord = z.object({
   id: z.string(),
-
   createdAt: z.string(),
   updatedAt: z.string(),
 
