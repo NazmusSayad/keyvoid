@@ -2,88 +2,59 @@
 
 import { Button } from '@/components/ui/button'
 import { Wrapper } from '@/components/wrapper'
-import {
-  ArrowRight01Icon,
-  Database01Icon,
-  EyeIcon,
-  GithubIcon,
-  Key01Icon,
-  LockIcon,
-  ShieldKeyIcon,
-  WifiCircleIcon,
-} from '@hugeicons/core-free-icons'
+import { ArrowRight01Icon, GithubIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
-
-const features = [
-  {
-    icon: EyeIcon,
-    title: 'Zero Knowledge',
-    description:
-      'Your data is encrypted before it ever reaches our servers. We cannot see, read, or access your information under any circumstances.',
-  },
-  {
-    icon: LockIcon,
-    title: 'End-to-End Encryption',
-    description:
-      '256-bit encryption protects every document, link, and snippet. Only you hold the keys.',
-  },
-  {
-    icon: Database01Icon,
-    title: 'Organized Vaults',
-    description:
-      'Create multiple vaults to separate and categorize your sensitive data.',
-  },
-  {
-    icon: WifiCircleIcon,
-    title: 'Access Anywhere',
-    description:
-      'Your vault follows you on every device. Secure and always in sync.',
-  },
-  {
-    icon: ShieldKeyIcon,
-    title: 'Self-Destructing Links',
-    description:
-      'Share sensitive information with one-time links that vanish after viewing.',
-  },
-  {
-    icon: Key01Icon,
-    title: 'Fast',
-    description:
-      'Encryption and decryption happen instantly. No lag, no waiting.',
-  },
-]
 
 export function Hero() {
   return (
     <div className="min-h-screen">
-      <section className="pt-32 pb-24">
+      <section className="relative pt-32 pb-24">
         <Wrapper>
-          <div className="max-w-2xl">
-            <h1 className="text-foreground text-4xl leading-tight font-bold tracking-tight sm:text-5xl">
-              Encrypted vault for
-              <br />
-              your private data
-            </h1>
+          <div className="grid gap-16 lg:grid-cols-2 lg:gap-8">
+            <div className="flex flex-col justify-center">
+              <div className="mb-6 inline-flex">
+                <span className="bg-primary/10 text-primary border-primary/20 rounded-none border px-2 py-1 font-mono text-xs">
+                  v2.0 — now self-hostable
+                </span>
+              </div>
 
-            <p className="text-muted-foreground mt-6 max-w-lg text-base leading-relaxed">
-              Store documents, links, passwords, and notes with zero-knowledge
-              encryption. Only you can access your data. Always.
-            </p>
+              <h1 className="text-foreground text-5xl leading-[0.95] font-bold tracking-tight sm:text-6xl lg:text-7xl">
+                Encrypted
+                <br />
+                <span className="text-primary">vault</span>
+              </h1>
 
-            <div className="mt-8 flex items-center gap-3">
-              <Button asChild>
-                <Link href="/vault">
-                  Open Vault
-                  <HugeiconsIcon
-                    icon={ArrowRight01Icon}
-                    className="ml-1.5 size-4"
-                  />
-                </Link>
-              </Button>
-              <Button asChild variant="outline">
-                <Link href="/auth/login">Sign in</Link>
-              </Button>
+              <p className="text-muted-foreground mt-6 max-w-sm text-base leading-relaxed">
+                Zero-knowledge storage for passwords, documents, and secrets.
+                You hold the keys. We hold nothing.
+              </p>
+
+              <div className="mt-8 flex items-center gap-3">
+                <Button asChild size="lg">
+                  <Link href="/vault">
+                    open vault
+                    <HugeiconsIcon
+                      icon={ArrowRight01Icon}
+                      className="ml-2 size-4"
+                    />
+                  </Link>
+                </Button>
+                <Button asChild variant="ghost" size="lg">
+                  <a
+                    href="https://github.com/NazmusSayad/keyvoid"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <HugeiconsIcon icon={GithubIcon} className="mr-2 size-4" />
+                    source
+                  </a>
+                </Button>
+              </div>
+            </div>
+
+            <div className="relative flex items-center justify-center lg:justify-end">
+              <VaultVisual />
             </div>
           </div>
         </Wrapper>
@@ -91,33 +62,68 @@ export function Hero() {
 
       <section className="border-border border-t py-20">
         <Wrapper>
-          <div>
-            <h2 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl">
-              Features
-            </h2>
-            <p className="text-muted-foreground mt-2 max-w-md text-sm leading-relaxed">
-              Built to keep your data safe and accessible. Nothing more, nothing
-              less.
-            </p>
-          </div>
+          <div className="grid gap-12 lg:grid-cols-12">
+            <div className="lg:col-span-4">
+              <h2 className="text-foreground text-2xl font-bold">
+                How it works
+              </h2>
+              <p className="text-muted-foreground mt-2 text-sm">
+                Three steps. No complexity.
+              </p>
+            </div>
 
-          <div className="divide-border mt-12 flex flex-col divide-y">
-            {features.map((f) => (
-              <div
-                key={f.title}
-                className="group flex items-start gap-5 py-6 first:pt-0"
-              >
-                <HugeiconsIcon
-                  icon={f.icon}
-                  className="text-muted-foreground mt-0.5 size-5 shrink-0"
-                />
-                <div>
-                  <h3 className="text-foreground text-sm font-semibold">
-                    {f.title}
-                  </h3>
-                  <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-                    {f.description}
-                  </p>
+            <div className="lg:col-span-8">
+              <div className="grid gap-8 sm:grid-cols-3">
+                {[
+                  {
+                    num: '01',
+                    title: 'Create',
+                    desc: 'Generate your vault with a master password only you know.',
+                  },
+                  {
+                    num: '02',
+                    title: 'Encrypt',
+                    desc: 'Add secrets. Everything encrypts in your browser before sending.',
+                  },
+                  {
+                    num: '03',
+                    title: 'Access',
+                    desc: 'Retrieve from anywhere. Decryption happens client-side.',
+                  },
+                ].map((step) => (
+                  <div key={step.num} className="relative">
+                    <span className="text-primary font-mono text-3xl font-bold">
+                      {step.num}
+                    </span>
+                    <h3 className="text-foreground mt-4 text-sm font-semibold">
+                      {step.title}
+                    </h3>
+                    <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
+                      {step.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Wrapper>
+      </section>
+
+      <section className="border-border border-t py-20">
+        <Wrapper>
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { label: 'Encryption', value: 'AES-256-GCM' },
+              { label: 'Architecture', value: 'Zero-knowledge' },
+              { label: 'License', value: 'MIT' },
+              { label: 'Hosting', value: 'Self-hosted' },
+            ].map((stat) => (
+              <div key={stat.label} className="border-border border-l-2 pl-4">
+                <div className="text-muted-foreground font-mono text-xs uppercase">
+                  {stat.label}
+                </div>
+                <div className="text-foreground mt-1 text-lg font-semibold">
+                  {stat.value}
                 </div>
               </div>
             ))}
@@ -125,55 +131,60 @@ export function Hero() {
         </Wrapper>
       </section>
 
-      <section className="border-border border-t py-20">
-        <Wrapper>
-          <div className="max-w-lg">
-            <h2 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl">
-              Start using Keyvoid
-            </h2>
-            <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-              No credit card. No tracking. Open source and ready to self-host.
-            </p>
-            <div className="mt-6 flex items-center gap-3">
-              <Button asChild>
-                <Link href="/vault">
-                  Get Started
-                  <HugeiconsIcon
-                    icon={ArrowRight01Icon}
-                    className="ml-1.5 size-4"
-                  />
-                </Link>
-              </Button>
-              <Button asChild variant="outline">
-                <a
-                  href="https://github.com/NazmusSayad/keyvoid"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <HugeiconsIcon icon={GithubIcon} className="mr-1.5 size-4" />
-                  GitHub
-                </a>
-              </Button>
-            </div>
+      <footer className="border-border border-t py-6">
+        <Wrapper className="flex items-center justify-between">
+          <span className="text-muted-foreground font-mono text-xs">
+            &copy; {new Date().getFullYear()}
+          </span>
+          <div className="flex items-center gap-4">
+            <a
+              href="/legal/privacy"
+              className="text-muted-foreground hover:text-foreground text-xs transition-colors"
+            >
+              privacy
+            </a>
+            <a
+              href="/legal/terms"
+              className="text-muted-foreground hover:text-foreground text-xs transition-colors"
+            >
+              terms
+            </a>
           </div>
         </Wrapper>
-      </section>
-
-      <footer className="border-border border-t py-8">
-        <Wrapper className="flex items-center justify-between">
-          <span className="text-muted-foreground text-xs">
-            &copy; {new Date().getFullYear()} Keyvoid
-          </span>
-          <a
-            href="https://github.com/NazmusSayad/keyvoid"
-            target="_blank"
-            rel="noreferrer"
-            className="text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <HugeiconsIcon icon={GithubIcon} className="size-4" />
-          </a>
-        </Wrapper>
       </footer>
+    </div>
+  )
+}
+
+function VaultVisual() {
+  return (
+    <div className="relative">
+      <div className="border-border bg-card relative flex aspect-square w-64 items-center justify-center border sm:w-80">
+        <div className="grid grid-cols-6 gap-1">
+          {Array.from({ length: 36 }).map((_, i) => {
+            const isActive = [
+              2, 3, 4, 8, 11, 14, 17, 20, 23, 26, 29, 32, 33, 34,
+            ].includes(i)
+            return (
+              <div
+                key={i}
+                className={`size-8 sm:size-10 ${
+                  isActive ? 'bg-primary' : 'bg-muted'
+                }`}
+              />
+            )
+          })}
+        </div>
+
+        <div className="border-border bg-background absolute -right-3 -bottom-3 border px-2 py-1">
+          <span className="text-muted-foreground font-mono text-xs">
+            256-bit
+          </span>
+        </div>
+      </div>
+
+      <div className="border-border bg-background absolute -top-3 -left-3 size-6 border" />
+      <div className="border-border bg-background absolute -top-3 -right-3 size-6 border" />
     </div>
   )
 }
