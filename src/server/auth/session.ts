@@ -8,7 +8,7 @@ import {
 } from '@/server/auth/auth-state'
 import { prisma } from '@/server/db'
 import { SignJWT, jwtVerify } from 'jose'
-import { SessionUser } from '../schema/user'
+import { SessionUser } from '../schema/auth'
 
 const jwtAudience = 'vault-app-session'
 const jwtIssuer = serverEnv.APP_URL
