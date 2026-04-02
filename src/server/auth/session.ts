@@ -1,6 +1,7 @@
 'use server'
 
 import { serverEnv } from '@/env.server'
+import { SessionUser } from '@/lib/schema'
 import {
   clearSessionCookie,
   getSessionCookieValue,
@@ -8,7 +9,7 @@ import {
 } from '@/server/auth/auth-state'
 import { prisma } from '@/server/db'
 import { SignJWT, jwtVerify } from 'jose'
-import { SessionUser } from '../schema/auth'
+import { User } from '../db/.prisma/client'
 
 const jwtAudience = 'vault-app-session'
 const jwtIssuer = serverEnv.APP_URL
@@ -61,11 +62,7 @@ function isPasswordChangeNewerThanToken(
   return issuedAt < Math.floor(appUser.passwordChangedAt.getTime() / 1000)
 }
 
-export async function createSessionUser(appUser: {
-  id: string
-  name: string
-  avatarUrl: string | null
-}) {
+export async function createSessionUser(appUser: User) {
   const sessionToken = await createSessionToken(appUser.id)
   await setSessionCookie(sessionToken)
 
