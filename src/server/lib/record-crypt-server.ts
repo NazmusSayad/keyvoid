@@ -1,6 +1,7 @@
+import 'server-only'
+
 import { serverEnv } from '@/env.server'
 import { EncryptionServer } from '@/lib/encryption/encryption.server'
-import 'server-only'
 
 type RecordData = {
   data?: string | null
@@ -9,7 +10,7 @@ type RecordData = {
 
 const encryption = new EncryptionServer()
 
-export async function encryptRecord({
+export async function encryptRecordServer({
   data,
   metadata,
 }: RecordData): Promise<RecordData> {
@@ -27,7 +28,9 @@ export async function encryptRecord({
   }
 }
 
-export async function decryptRecord(input: RecordData): Promise<RecordData> {
+export async function decryptRecordServer(
+  input: RecordData
+): Promise<RecordData> {
   return {
     data:
       typeof input.data === 'string'

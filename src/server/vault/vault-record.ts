@@ -6,7 +6,10 @@ import { requireCurrentSessionUser } from '@/server/auth/session'
 import { prisma } from '@/server/db'
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { z } from 'zod'
-import { decryptRecord, encryptRecord } from '../lib/record-crypt'
+import {
+  decryptRecordServer,
+  encryptRecordServer,
+} from '../lib/record-crypt-server'
 
 const createVaultRecordSchema = z.object({
   auth: z.string().trim().min(1, 'Enter a vault PIN.'),
@@ -98,7 +101,7 @@ export async function getVaultRecordsAction(
     vault.vaultRecords.map(async (record) => {
       return PublicRecord.parse({
         ...record,
-        ...(await decryptRecord(record)),
+        ...(await decryptRecordServer(record)),
       })
     })
   )
@@ -142,7 +145,7 @@ export async function createVaultRecordAction(
       name: body.name,
       type: body.type,
       vaultId: body.vaultId,
-      ...(await encryptRecord(body)),
+      ...(await encryptRecordServer(body)),
     },
   })
 }
@@ -179,7 +182,7 @@ export async function updateVaultRecordAction(
     data: {
       name: body.name,
       type: body.type,
-      ...(await encryptRecord(body)),
+      ...(await encryptRecordServer(body)),
     },
   })
 }
