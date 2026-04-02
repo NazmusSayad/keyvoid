@@ -41,15 +41,11 @@ export async function requestSignUpOTPAction(
 
   const otp = await registerOTPGenerator.createToken({ email })
 
-  console.log(otp)
-
   await sendOtpEmail({
     description: 'Use this code to verify your KeyVoid registration.',
     email,
     otp: otp.otp,
     subject: 'Verify your KeyVoid registration',
-  }).catch((error) => {
-    console.error('Error sending OTP email:', error)
   })
 
   return {

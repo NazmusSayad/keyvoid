@@ -1,71 +1,19 @@
-import { randomUUID } from 'node:crypto'
-
 import { serverEnv } from '@/env.server'
 import {
   getDefaultNameFromEmail,
   normalizeEmail,
 } from '@/server/auth/auth-helpers'
-import { createAuthenticationSuccessResponse } from '@/server/auth/session'
-import { OAUTH_STATE_COOKIE_NAME, SECURE_COOKIES } from '@/server/constants'
+import { createSessionUser } from '@/server/auth/session'
 import { prisma } from '@/server/db'
 import { NextRequest, NextResponse } from 'next/server'
+import z from 'zod'
 
-type OAuthProvider = 'github' | 'google'
+const supportedProviderSchema = z.enum(['google', 'github'])
 
 type OAuthProfile = {
   avatarUrl: string | null
   email: string
   name: string | null
-  providerAccountId: string
-}
-
-function parseProvider(value: string): OAuthProvider | null {
-  if (value === 'github' || value === 'google') {
-    return value
-  }
-
-  return null
-}
-
-function getAuthorizeUrl(provider: OAuthProvider, state: string) {
-  if (provider === 'google') {
-    const params = new URLSearchParams({
-      client_id: serverEnv.OAUTH_GOOGLE_CLIENT_ID,
-      redirect_uri: `${serverEnv.APP_URL}/oauth/google`,
-      response_type: 'code',
-      scope: 'openid email profile',
-      state,
-    })
-
-    return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`
-  }
-
-  const params = new URLSearchParams({
-    client_id: serverEnv.OAUTH_GITHUB_CLIENT_ID,
-    redirect_uri: `${serverEnv.APP_URL}/oauth/github`,
-    scope: 'read:user user:email',
-    state,
-  })
-
-  return `https://github.com/login/oauth/authorize?${params.toString()}`
-}
-
-function createAuthRedirect(request: NextRequest, message: string) {
-  const response = NextResponse.redirect(
-    new URL(`/auth/login?error=${encodeURIComponent(message)}`, request.url)
-  )
-
-  response.cookies.set({
-    name: OAUTH_STATE_COOKIE_NAME,
-    value: '',
-    httpOnly: true,
-    maxAge: 0,
-    path: '/',
-    sameSite: 'lax',
-    secure: SECURE_COOKIES,
-  })
-
-  return response
 }
 
 async function exchangeGoogleCodeForProfile(
@@ -126,7 +74,6 @@ async function exchangeGoogleCodeForProfile(
     avatarUrl: profile.picture?.trim() || null,
     email: profile.email,
     name: profile.name?.trim() || null,
-    providerAccountId: profile.id,
   }
 }
 
@@ -214,16 +161,22 @@ async function exchangeGithubCodeForProfile(
     avatarUrl: profile.avatar_url?.trim() || null,
     email,
     name: profile.name?.trim() || null,
-    providerAccountId: String(profile.id),
   }
 }
 
-async function getOAuthProfile(provider: OAuthProvider, code: string) {
+async function getOAuthProfile(
+  provider: z.infer<typeof supportedProviderSchema>,
+  code: string
+) {
   if (provider === 'google') {
     return exchangeGoogleCodeForProfile(code)
   }
 
-  return exchangeGithubCodeForProfile(code)
+  if (provider === 'github') {
+    return exchangeGithubCodeForProfile(code)
+  }
+
+  throw new Error('Unsupported OAuth provider.')
 }
 
 export async function GET(
@@ -231,49 +184,26 @@ export async function GET(
   context: { params: Promise<{ provider: string }> }
 ) {
   const { provider: rawProvider } = await context.params
-  const provider = parseProvider(rawProvider)
-
-  if (!provider) {
-    return createAuthRedirect(request, 'Unsupported OAuth provider.')
-  }
-
-  const url = new URL(request.url)
-  const code = url.searchParams.get('code')
-  const error = url.searchParams.get('error')
-  const errorDescription = url.searchParams.get('error_description')
-
-  if (error || errorDescription) {
-    return createAuthRedirect(
-      request,
-      errorDescription ?? 'The OAuth provider returned an authentication error.'
-    )
-  }
-
-  if (!code) {
-    const state = randomUUID()
-    const response = NextResponse.redirect(getAuthorizeUrl(provider, state))
-
-    response.cookies.set({
-      name: OAUTH_STATE_COOKIE_NAME,
-      value: `${provider}:${state}`,
-      httpOnly: true,
-      maxAge: 60 * 10,
-      path: '/',
-      sameSite: 'lax',
-      secure: SECURE_COOKIES,
-    })
-
-    return response
-  }
-
-  const state = url.searchParams.get('state')
-  const expectedState = request.cookies.get(OAUTH_STATE_COOKIE_NAME)?.value
-
-  if (!state || expectedState !== `${provider}:${state}`) {
-    return createAuthRedirect(request, 'Invalid OAuth state. Please try again.')
-  }
-
   try {
+    const provider = supportedProviderSchema.parse(rawProvider)
+
+    const url = new URL(request.url)
+    const code = url.searchParams.get('code')
+    const error = url.searchParams.get('error')
+    const errorDescription = url.searchParams.get('error_description')
+
+    if (error || errorDescription) {
+      throw new Error(
+        `OAuth provider error: ${error || 'unknown'}. ${
+          errorDescription || ''
+        }`.trim()
+      )
+    }
+
+    if (!code) {
+      throw new Error('No code returned from OAuth provider.')
+    }
+
     const oauthProfile = await getOAuthProfile(provider, code)
     const email = normalizeEmail(oauthProfile.email)
 
@@ -299,54 +229,17 @@ export async function GET(
       })
     }
 
-    const existingOAuthAccount = await prisma.oAuthAccount.findUnique({
-      where: {
-        provider_providerAccountId: {
-          provider,
-          providerAccountId: oauthProfile.providerAccountId,
-        },
-      },
-    })
-
-    if (existingOAuthAccount && existingOAuthAccount.userId !== user.id) {
-      return createAuthRedirect(
-        request,
-        'This social account is already connected to another user.'
-      )
-    }
-
-    if (!existingOAuthAccount) {
-      await prisma.oAuthAccount.create({
-        data: {
-          provider,
-          providerAccountId: oauthProfile.providerAccountId,
-          userId: user.id,
-        },
-      })
-    }
-
-    const response = await createAuthenticationSuccessResponse(
-      { id: user.id },
-      { returnTo: '/' }
-    )
-
-    response.cookies.set({
-      name: OAUTH_STATE_COOKIE_NAME,
-      value: '',
-      httpOnly: true,
-      maxAge: 0,
-      path: '/',
-      sameSite: 'lax',
-      secure: SECURE_COOKIES,
-    })
-
-    return response
+    await createSessionUser(user)
+    return NextResponse.redirect(new URL('/', request.url))
   } catch (error) {
-    return createAuthRedirect(
-      request,
-      error instanceof Error
-        ? error.message
-        : 'Could not sign you in with this OAuth provider.'
+    const errorMessage =
+      error instanceof Error ? error.message : 'An unknown error occurred.'
+
+    return NextResponse.redirect(
+      new URL(
+        `/auth/login?error=${encodeURIComponent(errorMessage)}`,
+        request.url
+      )
     )
   }
 }

@@ -7,16 +7,9 @@ import { EncryptionServer } from '@/lib/encryption/encryption.server'
 import { requireCurrentSessionUser } from '@/server/auth/session'
 import { prisma } from '@/server/db'
 import { z } from 'zod'
-import { RecordType } from '../db/.prisma/enums'
 
 const encryption = new EncryptionServer()
 const invalidVaultAuthMessage = 'Invalid vault PIN.'
-
-const vaultRecordTypeSchema = z.enum([
-  RecordType.PASSWORD,
-  RecordType.API_KEY,
-  RecordType.NOTE,
-])
 
 const getVaultRecordSchema = z.object({
   auth: z.string().trim().min(1, 'Enter a vault PIN.'),
@@ -28,7 +21,7 @@ const createVaultRecordSchema = z.object({
   auth: z.string().trim().min(1, 'Enter a vault PIN.'),
   data: z.string().trim().min(1, 'Record data is required.'),
   name: z.string().trim().min(1, 'Enter a record name.'),
-  type: vaultRecordTypeSchema,
+  type: z.string().trim().min(1, 'Type is required.'),
   vaultId: z.string().trim().min(1, 'Vault is required.'),
 })
 
@@ -37,7 +30,7 @@ const updateVaultRecordSchema = z.object({
   data: z.string().trim().min(1, 'Record data is required.'),
   name: z.string().trim().min(1, 'Enter a record name.'),
   recordId: z.string().trim().min(1, 'Record is required.'),
-  type: vaultRecordTypeSchema,
+  type: z.string().trim().min(1, 'Type is required.'),
   vaultId: z.string().trim().min(1, 'Vault is required.'),
 })
 
@@ -104,7 +97,7 @@ function serializeVaultRecord(record: {
   createdAt: Date
   updatedAt: Date
   name: string
-  type: keyof typeof RecordType
+  type: string
   data: string
   vaultId: string
 }) {
@@ -122,7 +115,7 @@ function serializeVaultRecord(record: {
 function serializeVaultRecordListItem(record: {
   id: string
   name: string
-  type: keyof typeof RecordType
+  type: string
   updatedAt: Date
   vaultId: string
 }) {

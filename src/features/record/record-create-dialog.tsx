@@ -6,7 +6,6 @@ import {
 } from '@/components/ui/better-dialog'
 import { EncryptionClient } from '@/lib/encryption/encryption.client'
 import { queryClient } from '@/lib/query-client'
-import { RecordType } from '@/server/db/.prisma/browser'
 import { createVaultRecordAction } from '@/server/vault/vault-record'
 import { useAuthStore } from '@/store/use-auth-store'
 import { File01Icon } from '@hugeicons/core-free-icons'
@@ -70,12 +69,12 @@ function RecordCreateDialogContent({
   const [data, setData] = useState<RecordField[]>(createInitialFields)
   const [error, setError] = useState('')
   const [name, setName] = useState('')
-  const [type, setType] = useState<RecordType>(RecordType.NOTE)
+  const [type, setType] = useState('')
   const createRecordMutation = useMutation({
     mutationFn: async (input: {
       data: RecordField[]
       name: string
-      type: RecordType
+      type: string
     }) => {
       if (!auth) {
         throw new Error('Unlock this vault first.')
