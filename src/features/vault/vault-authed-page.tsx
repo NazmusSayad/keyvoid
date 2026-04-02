@@ -12,10 +12,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { RecordCreateDialog } from '@/features/record/record-create-dialog'
-import {
-  getRecordDialogHref,
-  RecordDialog,
-} from '@/features/record/view-record-dialog'
+import { getRecordDialogHref } from '@/features/record/view-record-dialog'
 import { File01Icon, NoteIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
@@ -143,8 +140,6 @@ export function VaultAuthedPage() {
                 </Table>
               </section>
             )}
-
-            <RecordDialog vault={vault} records={records} />
           </div>
         </div>
       </BetterScrollAreaFaded>

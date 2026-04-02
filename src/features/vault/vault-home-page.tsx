@@ -106,7 +106,6 @@ export function VaultHomePage() {
                     <div className="bg-muted text-foreground flex size-12 items-center justify-center rounded-2xl text-lg font-semibold">
                       {vault.icon?.trim() || vault.name.charAt(0).toUpperCase()}
                     </div>
-                    <Badge variant="outline">{vault.recordCount} records</Badge>
                   </div>
 
                   <div className="mt-5 space-y-2">
