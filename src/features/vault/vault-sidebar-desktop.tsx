@@ -17,7 +17,12 @@ import { cn } from '@/lib/utils'
 import { signOutAction } from '@/server/auth/session'
 import { getVaultsAction } from '@/server/vault/vault'
 import { useAuthStore } from '@/store/use-auth-store'
-import { SquareUnlock01Icon, WalletAdd01Icon } from '@hugeicons/core-free-icons'
+import {
+  Logout02Icon,
+  SquareUnlock01Icon,
+  UserCircleIcon,
+  WalletAdd01Icon,
+} from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
@@ -43,6 +48,7 @@ export function VaultSidebarDesktop({
     queryKey: ['vaults'],
   })
 
+  const [isCreateVaultDialogOpen, setIsCreateVaultDialogOpen] = useState(false)
   const [isSigningOut, setIsSigningOut] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -66,122 +72,116 @@ export function VaultSidebarDesktop({
     }
   }
 
+  const noVaultAvailable = vaultsQuery.data?.vaults.length === 0
+
   return (
     <aside
       className={cn(
         'border-border bg-card grid h-screen w-[16rem] grid-rows-[auto_1fr_auto] border-r',
-        vaultsQuery.data?.vaults.length
-          ? 'grid-rows-[auto_1fr_auto]'
-          : 'grid-rows-[1fr_auto]',
         mobileMode && 'w-full'
       )}
     >
-      {!!vaultsQuery.data?.vaults.length && (
-        <>
-          <div className="flex items-center gap-4 border-b p-3 py-2.5">
-            <Link href="/vault">
-              <Logo className="size-8" />
-            </Link>
+      <div className="flex items-center gap-4 border-b p-3 py-2.5">
+        <Link href="/vault">
+          <Logo className="size-8" />
+        </Link>
 
-            <Input
-              placeholder="Search Vault"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+        <Input
+          placeholder="Search Vault"
+          value={searchQuery}
+          disabled={noVaultAvailable}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
 
-            {mobileMode && (
-              <SheetClose asChild>
-                <Button size="icon" variant="secondary" className="rounded-xl">
-                  <svg
-                    fill="none"
-                    width="1em"
-                    height="1em"
-                    viewBox="0 0 16 16"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M14.7434 1.1709L0.743408 15.1709M0.743408 1.1709L14.7434 15.1709"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="transition-all"
-                    />
-                  </svg>
-                </Button>
-              </SheetClose>
-            )}
-          </div>
+        {mobileMode && (
+          <SheetClose asChild>
+            <Button size="icon" variant="secondary" className="rounded-xl">
+              <svg
+                fill="none"
+                width="1em"
+                height="1em"
+                viewBox="0 0 16 16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M14.7434 1.1709L0.743408 15.1709M0.743408 1.1709L14.7434 15.1709"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="transition-all"
+                />
+              </svg>
+            </Button>
+          </SheetClose>
+        )}
+      </div>
 
-          <BetterScrollAreaFaded fadeSpace="12px">
-            <ul className="flex flex-col gap-2 p-3">
-              {filteredVaults.map((vault) => {
-                const isActive = pathname.startsWith(`/vault/${vault.id}`)
-
-                return (
-                  <li key={vault.id}>
-                    <Button
-                      asChild
-                      size="lg"
-                      onClick={triggerSheetClose}
-                      className="w-full justify-between px-3"
-                      variant={isActive ? 'default' : 'ghost'}
-                    >
-                      <Link href={`/vault/${vault.id}`}>
-                        <span className="flex items-center gap-2.5">
-                          <HugeiconsIcon
-                            icon={resolveVaultIcon(vault.icon || '')}
-                            className="text-foreground/80 size-4"
-                          />
-
-                          <span className="truncate">{vault.name}</span>
-                        </span>
-
-                        {!!vaultAuthMap[vault.id] && (
-                          <HugeiconsIcon
-                            icon={SquareUnlock01Icon}
-                            className="text-foreground/50 size-3"
-                          />
-                        )}
-                      </Link>
-                    </Button>
-                  </li>
-                )
-              })}
-            </ul>
-
-            {filteredVaults.length === 0 && (
-              <p className="text-muted-foreground px-4 text-center text-sm break-keep">
-                <span className="break-keep">No vaults found for</span>{' '}
-                <span className="break-all">&quot;{searchQuery}&quot;</span>
-              </p>
-            )}
-          </BetterScrollAreaFaded>
-        </>
-      )}
-
-      {vaultsQuery.data?.vaults.length === 0 && (
+      {noVaultAvailable ? (
         <div className="flex h-full items-center justify-center">
-          <VaultCreateDialog
-            trigger={
-              <Button>
-                <HugeiconsIcon icon={WalletAdd01Icon} className="size-4" />
-                Create new vault
-              </Button>
-            }
-          />
+          <Button onClick={() => setIsCreateVaultDialogOpen(true)}>
+            <HugeiconsIcon icon={WalletAdd01Icon} className="size-4" />
+            Create new vault
+          </Button>
         </div>
+      ) : (
+        <BetterScrollAreaFaded fadeSpace="12px">
+          <ul className="flex flex-col gap-2 p-3">
+            {filteredVaults.map((vault) => {
+              const isActive = pathname.startsWith(`/vault/${vault.id}`)
+
+              return (
+                <li key={vault.id}>
+                  <Button
+                    asChild
+                    size="lg"
+                    onClick={triggerSheetClose}
+                    className="w-full justify-between px-3"
+                    variant={isActive ? 'default' : 'ghost'}
+                  >
+                    <Link href={`/vault/${vault.id}`}>
+                      <span className="flex items-center gap-2.5">
+                        <HugeiconsIcon
+                          icon={resolveVaultIcon(vault.icon || '')}
+                          className="text-foreground/80 size-4"
+                        />
+
+                        <span className="truncate">{vault.name}</span>
+                      </span>
+
+                      {!!vaultAuthMap[vault.id] && (
+                        <HugeiconsIcon
+                          icon={SquareUnlock01Icon}
+                          className="text-foreground/50 size-3"
+                        />
+                      )}
+                    </Link>
+                  </Button>
+                </li>
+              )
+            })}
+          </ul>
+
+          {searchQuery && filteredVaults.length === 0 && (
+            <p className="text-muted-foreground px-4 text-center text-sm break-keep">
+              <span className="break-keep">No vaults found for</span>{' '}
+              <span className="break-all">&quot;{searchQuery}&quot;</span>
+            </p>
+          )}
+        </BetterScrollAreaFaded>
       )}
 
       <div className="flex flex-col gap-2 border-t p-3">
-        <VaultCreateDialog
-          trigger={
-            <Button variant="outline" className="w-full">
-              <HugeiconsIcon icon={WalletAdd01Icon} className="size-4" />
-              Create new vault
-            </Button>
-          }
-        />
+        {!noVaultAvailable && (
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => setIsCreateVaultDialogOpen(true)}
+          >
+            <HugeiconsIcon icon={WalletAdd01Icon} className="size-4" />
+            Create new vault
+          </Button>
+        )}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -202,7 +202,9 @@ export function VaultSidebarDesktop({
             style={{ width: 'var(--radix-dropdown-menu-trigger-width)' }}
           >
             <DropdownMenuItem asChild>
-              <Link href="/account">Account</Link>
+              <Link href="/account">
+                <HugeiconsIcon icon={UserCircleIcon} /> Account
+              </Link>
             </DropdownMenuItem>
 
             <DropdownMenuItem
@@ -213,12 +215,21 @@ export function VaultSidebarDesktop({
                 void handleSignOut()
               }}
             >
-              {isSigningOut && <Loading className="size-4" />}
+              {isSigningOut ? (
+                <Loading className="size-4" />
+              ) : (
+                <HugeiconsIcon icon={Logout02Icon} />
+              )}
               Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      <VaultCreateDialog
+        open={isCreateVaultDialogOpen}
+        onOpenChange={setIsCreateVaultDialogOpen}
+      />
     </aside>
   )
 }
