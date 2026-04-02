@@ -1,5 +1,3 @@
-import { randomUUID } from 'node:crypto'
-
 import { serverEnv } from '@/env.server'
 import {
   getDefaultNameFromEmail,
@@ -16,7 +14,6 @@ type OAuthProfile = {
   avatarUrl: string | null
   email: string
   name: string | null
-  providerAccountId: string
 }
 
 function parseProvider(value: string): OAuthProvider | null {
@@ -25,29 +22,6 @@ function parseProvider(value: string): OAuthProvider | null {
   }
 
   return null
-}
-
-function getAuthorizeUrl(provider: OAuthProvider, state: string) {
-  if (provider === 'google') {
-    const params = new URLSearchParams({
-      client_id: serverEnv.OAUTH_GOOGLE_CLIENT_ID,
-      redirect_uri: `${serverEnv.APP_URL}/oauth/google`,
-      response_type: 'code',
-      scope: 'openid email profile',
-      state,
-    })
-
-    return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`
-  }
-
-  const params = new URLSearchParams({
-    client_id: serverEnv.OAUTH_GITHUB_CLIENT_ID,
-    redirect_uri: `${serverEnv.APP_URL}/oauth/github`,
-    scope: 'read:user user:email',
-    state,
-  })
-
-  return `https://github.com/login/oauth/authorize?${params.toString()}`
 }
 
 function createAuthRedirect(request: NextRequest, message: string) {
@@ -126,7 +100,6 @@ async function exchangeGoogleCodeForProfile(
     avatarUrl: profile.picture?.trim() || null,
     email: profile.email,
     name: profile.name?.trim() || null,
-    providerAccountId: profile.id,
   }
 }
 
@@ -214,7 +187,6 @@ async function exchangeGithubCodeForProfile(
     avatarUrl: profile.avatar_url?.trim() || null,
     email,
     name: profile.name?.trim() || null,
-    providerAccountId: String(profile.id),
   }
 }
 
@@ -250,20 +222,7 @@ export async function GET(
   }
 
   if (!code) {
-    const state = randomUUID()
-    const response = NextResponse.redirect(getAuthorizeUrl(provider, state))
-
-    response.cookies.set({
-      name: OAUTH_STATE_COOKIE_NAME,
-      value: `${provider}:${state}`,
-      httpOnly: true,
-      maxAge: 60 * 10,
-      path: '/',
-      sameSite: 'lax',
-      secure: SECURE_COOKIES,
-    })
-
-    return response
+    return createAuthRedirect(request, 'Missing OAuth authorization code.')
   }
 
   const state = url.searchParams.get('state')
@@ -295,32 +254,6 @@ export async function GET(
         where: { id: user.id },
         data: {
           avatarUrl: oauthProfile.avatarUrl,
-        },
-      })
-    }
-
-    const existingOAuthAccount = await prisma.oAuthAccount.findUnique({
-      where: {
-        provider_providerAccountId: {
-          provider,
-          providerAccountId: oauthProfile.providerAccountId,
-        },
-      },
-    })
-
-    if (existingOAuthAccount && existingOAuthAccount.userId !== user.id) {
-      return createAuthRedirect(
-        request,
-        'This social account is already connected to another user.'
-      )
-    }
-
-    if (!existingOAuthAccount) {
-      await prisma.oAuthAccount.create({
-        data: {
-          provider,
-          providerAccountId: oauthProfile.providerAccountId,
-          userId: user.id,
         },
       })
     }

@@ -7,7 +7,6 @@ import {
   setResponseSessionCookie,
   setSessionCookie,
 } from '@/server/auth/auth-state'
-import { getAbsoluteUrl } from '@/server/auth/shared'
 import type { SessionUser } from '@/server/auth/types'
 import { prisma } from '@/server/db'
 import { SignJWT, jwtVerify } from 'jose'
@@ -95,7 +94,10 @@ export async function createAuthenticationSuccessResponse(
   }
 ) {
   const response = NextResponse.redirect(
-    getAbsoluteUrl(options?.returnTo?.startsWith('/') ? options.returnTo : '/')
+    new URL(
+      options?.returnTo?.startsWith('/') ? options.returnTo : '/',
+      serverEnv.APP_URL
+    )
   )
 
   setResponseSessionCookie(response, await createSessionToken(appUser.id))

@@ -9,17 +9,12 @@ import {
 } from '@/components/ui/better-dialog'
 import { EncryptionClient } from '@/lib/encryption/encryption.client'
 import { queryClient } from '@/lib/query-client'
-import { RecordType } from '@/server/db/.prisma/browser'
 import {
   getVaultRecordAction,
   updateVaultRecordAction,
 } from '@/server/vault/vault-record'
 import { useAuthStore } from '@/store/use-auth-store'
-import {
-  Key02Icon,
-  NoteIcon,
-  SquareLock02Icon,
-} from '@hugeicons/core-free-icons'
+import { NoteIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -28,18 +23,6 @@ import { toast } from 'sonner'
 import { RecordEditor, type RecordField } from './record-editor'
 
 const encryption = new EncryptionClient()
-
-function getRecordTypeIcon(type: RecordType) {
-  if (type === RecordType.PASSWORD) {
-    return SquareLock02Icon
-  }
-
-  if (type === RecordType.API_KEY) {
-    return Key02Icon
-  }
-
-  return NoteIcon
-}
 
 function getRecordDialogHref(
   pathname: string,
@@ -73,7 +56,7 @@ type DecryptedRecord = {
   createdAt: string
   updatedAt: string
   name: string
-  type: RecordType
+  type: string
   data: RecordField[]
   vaultId: string
 }
@@ -211,12 +194,12 @@ function EditableRecord({ record, vault }: EditableRecordProps) {
   const [data, setData] = useState<RecordField[]>(record.data)
   const [error, setError] = useState('')
   const [name, setName] = useState(record.name)
-  const [type, setType] = useState<RecordType>(record.type)
+  const [type, setType] = useState(record.type)
   const updateRecordMutation = useMutation({
     mutationFn: async (input: {
       data: RecordField[]
       name: string
-      type: RecordType
+      type: string
     }) => {
       if (!auth) {
         throw new Error('Unlock this vault first.')
@@ -260,7 +243,7 @@ function EditableRecord({ record, vault }: EditableRecordProps) {
       <div className="space-y-6">
         <div className="flex items-center gap-3">
           <span className="bg-muted flex size-12 items-center justify-center rounded-2xl">
-            <HugeiconsIcon icon={getRecordTypeIcon(type)} className="size-5" />
+            <HugeiconsIcon icon={NoteIcon} className="size-5" />
           </span>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <Badge variant="secondary" className="rounded-full px-3 py-1">

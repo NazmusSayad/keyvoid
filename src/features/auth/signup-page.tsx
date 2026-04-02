@@ -9,11 +9,11 @@ import {
 } from '@/components/ui/input-otp'
 import { Spinner } from '@/components/ui/spinner'
 import { queryClient } from '@/lib/query-client'
+import { getSocialAuthUrlAction } from '@/server/auth/sign-in'
 import {
   confirmSignUpOTPAction,
   requestSignUpOTPAction,
 } from '@/server/auth/sign-up'
-import { getSocialAuthUrlAction } from '@/server/auth/social'
 import { useAuthStore } from '@/store/use-auth-store'
 import { GithubIcon, GoogleIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -54,7 +54,7 @@ export function SignupPage() {
     },
   })
   const socialAuthMutation = useMutation({
-    mutationFn: (provider: 'GitHubOAuth' | 'GoogleOAuth') =>
+    mutationFn: (provider: 'github' | 'google') =>
       getSocialAuthUrlAction(provider),
     onSuccess: (result) => {
       window.location.assign(result.url)
@@ -295,7 +295,7 @@ export function SignupPage() {
                   className="border-border bg-background hover:bg-muted flex size-12 items-center justify-center rounded-full border transition-colors"
                   disabled={isBusy}
                   onClick={() => {
-                    socialAuthMutation.mutate('GitHubOAuth', {
+                    socialAuthMutation.mutate('github', {
                       onError: (nextError) => {
                         setError(
                           nextError instanceof Error
@@ -315,7 +315,7 @@ export function SignupPage() {
                   className="border-border bg-background hover:bg-muted flex size-12 items-center justify-center rounded-full border transition-colors"
                   disabled={isBusy}
                   onClick={() => {
-                    socialAuthMutation.mutate('GoogleOAuth', {
+                    socialAuthMutation.mutate('google', {
                       onError: (nextError) => {
                         setError(
                           nextError instanceof Error

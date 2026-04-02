@@ -1,15 +1,65 @@
 'use server'
 
+import { randomUUID } from 'node:crypto'
+
+import { serverEnv } from '@/env.server'
 import { normalizeEmail } from '@/server/auth/auth-helpers'
 import { verifyPassword } from '@/server/auth/password'
 import { createSessionUser } from '@/server/auth/session'
+import { OAUTH_STATE_COOKIE_NAME, SECURE_COOKIES } from '@/server/constants'
 import { prisma } from '@/server/db'
+import { cookies } from 'next/headers'
 import { z } from 'zod'
 
 const signInSchema = z.object({
   email: z.email('Enter a valid email address.'),
   password: z.string().min(1, 'Enter your password.'),
 })
+
+const socialProviderSchema = z.enum(['github', 'google'])
+
+export async function getSocialAuthUrlAction(
+  provider: z.infer<typeof socialProviderSchema>
+) {
+  const parsedProvider = socialProviderSchema.parse(provider)
+  const state = randomUUID()
+  const cookieStore = await cookies()
+
+  cookieStore.set({
+    name: OAUTH_STATE_COOKIE_NAME,
+    value: `${parsedProvider}:${state}`,
+    httpOnly: true,
+    maxAge: 60 * 10,
+    path: '/',
+    sameSite: 'lax',
+    secure: SECURE_COOKIES,
+  })
+
+  if (parsedProvider === 'google') {
+    const params = new URLSearchParams({
+      client_id: serverEnv.OAUTH_GOOGLE_CLIENT_ID,
+      redirect_uri: `${serverEnv.APP_URL}/oauth/google`,
+      response_type: 'code',
+      scope: 'openid email profile',
+      state,
+    })
+
+    return {
+      url: `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`,
+    }
+  }
+
+  const params = new URLSearchParams({
+    client_id: serverEnv.OAUTH_GITHUB_CLIENT_ID,
+    redirect_uri: `${serverEnv.APP_URL}/oauth/github`,
+    scope: 'read:user user:email',
+    state,
+  })
+
+  return {
+    url: `https://github.com/login/oauth/authorize?${params.toString()}`,
+  }
+}
 
 export async function signInAction(input: z.infer<typeof signInSchema>) {
   const body = signInSchema.parse(input)

@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
 import { Textarea } from '@/components/ui/textarea'
-import { RecordType } from '@/server/db/.prisma/browser'
 import {
   Add01Icon,
   Delete02Icon,
@@ -37,23 +36,23 @@ type RecordEditorProps = {
   onDataChange: (data: RecordField[]) => void
   onNameChange: (name: string) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
-  onTypeChange: (type: RecordType) => void
+  onTypeChange: (type: string) => void
   submitLabel: string
-  type: RecordType
+  type: string
 }
 
-const recordTypes = [RecordType.PASSWORD, RecordType.API_KEY, RecordType.NOTE]
+const recordTypes = ['PASSWORD', 'API_KEY', 'NOTE']
 
 export function createEmptyRecordField(): RecordField {
   return ['', '']
 }
 
-function getRecordTypeIcon(type: RecordType) {
-  if (type === RecordType.PASSWORD) {
+function getRecordTypeIcon(type: string) {
+  if (type === 'PASSWORD') {
     return SquareLock02Icon
   }
 
-  if (type === RecordType.API_KEY) {
+  if (type === 'API_KEY') {
     return Key02Icon
   }
 
@@ -63,7 +62,7 @@ function getRecordTypeIcon(type: RecordType) {
 function getRecordTypeValue(value: string) {
   const recordType = recordTypes.find((type) => type === value)
 
-  return recordType ?? RecordType.NOTE
+  return recordType ?? 'NOTE'
 }
 
 export function RecordEditor({

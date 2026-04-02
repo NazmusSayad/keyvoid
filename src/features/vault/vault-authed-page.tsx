@@ -16,7 +16,6 @@ import {
   getRecordDialogHref,
   RecordDialog,
 } from '@/features/record/view-record-dialog'
-import { RecordType } from '@/server/db/.prisma/browser'
 import {
   File01Icon,
   Key02Icon,
@@ -28,12 +27,12 @@ import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useVaultContext } from './contexts/vault-context'
 
-function getRecordTypeIcon(type: RecordType) {
-  if (type === RecordType.PASSWORD) {
+function getRecordTypeIcon(type: string) {
+  if (type === 'PASSWORD') {
     return SquareLock02Icon
   }
 
-  if (type === RecordType.API_KEY) {
+  if (type === 'API_KEY') {
     return Key02Icon
   }
 
