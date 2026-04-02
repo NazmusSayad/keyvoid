@@ -6,25 +6,13 @@ import {
   getSessionCookieValue,
   setSessionCookie,
 } from '@/server/auth/auth-state'
-import type { SessionUser } from '@/server/auth/types'
 import { prisma } from '@/server/db'
 import { SignJWT, jwtVerify } from 'jose'
+import { SessionUser } from '../schema/user'
 
 const jwtAudience = 'vault-app-session'
 const jwtIssuer = serverEnv.APP_URL
 const jwtSecret = new TextEncoder().encode(serverEnv.JWT_SESSION_SECRET)
-
-function serializeSessionUser(appUser: {
-  id: string
-  name: string
-  avatarUrl: string | null
-}) {
-  return {
-    avatarUrl: appUser.avatarUrl,
-    id: appUser.id,
-    name: appUser.name,
-  } satisfies SessionUser
-}
 
 async function createSessionToken(userId: string) {
   return new SignJWT({})
@@ -78,9 +66,10 @@ export async function createSessionUser(appUser: {
   name: string
   avatarUrl: string | null
 }) {
-  await setSessionCookie(await createSessionToken(appUser.id))
+  const sessionToken = await createSessionToken(appUser.id)
+  await setSessionCookie(sessionToken)
 
-  return serializeSessionUser(appUser)
+  return SessionUser.parse(appUser)
 }
 
 async function getCurrentSessionUser() {
@@ -100,11 +89,10 @@ async function getCurrentSessionUser() {
 
   if (!appUser || isPasswordChangeNewerThanToken(appUser, payload.iat)) {
     await clearSessionCookie()
-
     return null
   }
 
-  return serializeSessionUser(appUser)
+  return SessionUser.parse(appUser)
 }
 
 export async function requireCurrentSessionUser() {

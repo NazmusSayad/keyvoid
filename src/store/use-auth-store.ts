@@ -1,6 +1,6 @@
 'use client'
 
-import type { SessionUser } from '@/server/auth/types'
+import { SessionUserType } from '@/server/schema/user'
 import { create } from 'zustand'
 import { combine } from 'zustand/middleware'
 
@@ -8,7 +8,7 @@ export const useAuthStore = create(
   combine(
     {
       status: 'loading' as 'authenticated' | 'loading' | 'unauthenticated',
-      user: null as SessionUser | null,
+      user: null as SessionUserType | null,
       vaultAuthByVaultId: {} as Record<string, string>,
     },
     (set) => ({
@@ -32,7 +32,7 @@ export const useAuthStore = create(
         })
       },
 
-      setSession(user: SessionUser | null) {
+      setSession(user: SessionUserType | null) {
         set({
           status: user ? 'authenticated' : 'unauthenticated',
           user,
