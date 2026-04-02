@@ -104,11 +104,7 @@ export function VaultAuthedPage() {
                   </TableHeader>
                   <TableBody>
                     {records.map((record) => (
-                      <RecordRow
-                        key={record.id}
-                        vault={vault}
-                        record={record}
-                      />
+                      <RecordRow key={record.id} record={record} />
                     ))}
                   </TableBody>
                 </Table>

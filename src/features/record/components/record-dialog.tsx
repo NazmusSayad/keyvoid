@@ -2,13 +2,13 @@ import {
   BetterDialog,
   BetterDialogContent,
 } from '@/components/ui/better-dialog'
-import { PublicRecordType, PublicVaultType } from '@/lib/schema'
+import { useVaultContext } from '@/features/vault/contexts/vault-context'
+import { PublicRecordType } from '@/lib/schema'
 
 type RecordDialogProps = {
   open: boolean
   onOpenChange(open: boolean): void
 
-  vault: PublicVaultType
   record: PublicRecordType
 }
 
@@ -25,5 +25,8 @@ export function RecordDialog({ ...props }: RecordDialogProps) {
 }
 
 function RecordDialogContent({}: RecordDialogProps) {
+  const { vault } = useVaultContext()
+  console.log(vault)
+
   return <BetterDialogContent>Hello</BetterDialogContent>
 }

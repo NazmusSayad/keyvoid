@@ -1,17 +1,16 @@
 import { Badge } from '@/components/ui/badge'
 import { TableCell, TableRow } from '@/components/ui/table'
-import type { PublicRecordType, PublicVaultType } from '@/lib/schema'
+import type { PublicRecordType } from '@/lib/schema'
 import { NoteIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { RecordDialog } from './record-dialog'
 
 type RecordRowProps = {
-  vault: PublicVaultType
   record: PublicRecordType
 }
 
-export function RecordRow({ vault, record }: RecordRowProps) {
+export function RecordRow({ record }: RecordRowProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -35,7 +34,6 @@ export function RecordRow({ vault, record }: RecordRowProps) {
       </TableRow>
 
       <RecordDialog
-        vault={vault}
         record={record}
         open={searchParams.get('record') === record.id}
         onOpenChange={(open) => {
