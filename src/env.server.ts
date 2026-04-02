@@ -17,6 +17,9 @@ const serverEnvSchema = z.object({
 
   OAUTH_GITHUB_CLIENT_ID: z.string(),
   OAUTH_GITHUB_CLIENT_SECRET: z.string(),
+
+  GMAIL_ADDRESS: z.email(),
+  GMAIL_PASSWORD: z.string(),
 })
 
 export const serverEnv = serverEnvSchema.parse({
