@@ -7,8 +7,6 @@ import { requireCurrentSessionUser } from '@/server/auth/session'
 import { prisma } from '@/server/db'
 import { z } from 'zod'
 
-const invalidVaultAuthMessage = 'Invalid vault PIN.'
-
 const getVaultSchema = z.object({
   vaultId: z.string().trim().min(1, 'Vault is required.'),
 })
@@ -48,7 +46,7 @@ function requireValidVaultAuth({
     expectedHash.length !== actualHash.length ||
     !timingSafeEqual(expectedHash, actualHash)
   ) {
-    throw new Error(invalidVaultAuthMessage)
+    throw new Error('Invalid vault PIN.')
   }
 }
 

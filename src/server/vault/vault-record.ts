@@ -9,7 +9,6 @@ import { prisma } from '@/server/db'
 import { z } from 'zod'
 
 const encryption = new EncryptionServer()
-const invalidVaultAuthMessage = 'Invalid vault PIN.'
 
 const getVaultRecordSchema = z.object({
   auth: z.string().trim().min(1, 'Enter a vault PIN.'),
@@ -54,7 +53,7 @@ function requireValidVaultAuth({
     expectedHash.length !== actualHash.length ||
     !timingSafeEqual(expectedHash, actualHash)
   ) {
-    throw new Error(invalidVaultAuthMessage)
+    throw new Error('Invalid vault PIN.')
   }
 }
 
