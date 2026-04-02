@@ -25,7 +25,7 @@ export function Navbar() {
           </a>
 
           <Button asChild variant="ghost" size="sm">
-            <Link href="/auth">Sign in</Link>
+            <Link href="/auth/login">Sign in</Link>
           </Button>
 
           <Button asChild size="sm">

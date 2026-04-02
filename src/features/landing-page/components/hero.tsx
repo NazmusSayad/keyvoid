@@ -58,7 +58,7 @@ export function Hero() {
   return (
     <div className="min-h-screen">
       <section className="pt-32 pb-24">
-        <Wrapper className="">
+        <Wrapper>
           <div className="max-w-2xl">
             <h1 className="text-foreground text-4xl leading-tight font-bold tracking-tight sm:text-5xl">
               Encrypted vault for
@@ -82,7 +82,7 @@ export function Hero() {
                 </Link>
               </Button>
               <Button asChild variant="outline">
-                <Link href="/auth">Sign in</Link>
+                <Link href="/auth/login">Sign in</Link>
               </Button>
             </div>
           </div>
@@ -90,7 +90,7 @@ export function Hero() {
       </section>
 
       <section className="border-border border-t py-20">
-        <Wrapper className="">
+        <Wrapper>
           <div>
             <h2 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl">
               Features
@@ -126,7 +126,7 @@ export function Hero() {
       </section>
 
       <section className="border-border border-t py-20">
-        <Wrapper className="">
+        <Wrapper>
           <div className="max-w-lg">
             <h2 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl">
               Start using Keyvoid
@@ -160,7 +160,7 @@ export function Hero() {
       </section>
 
       <footer className="border-border border-t py-8">
-        <Wrapper className="flex items-center justify-between px-5">
+        <Wrapper className="flex items-center justify-between">
           <span className="text-muted-foreground text-xs">
             &copy; {new Date().getFullYear()} Keyvoid
           </span>
