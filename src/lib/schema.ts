@@ -6,7 +6,11 @@ export const SessionUser = z.object({
   name: z.string(),
   email: z.string(),
 
-  avatarUrl: z.string().optional(),
+  avatarUrl: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((o) => o || undefined),
 })
 
 export const PublicVault = z.object({
@@ -15,7 +19,11 @@ export const PublicVault = z.object({
   updatedAt: z.string(),
 
   name: z.string(),
-  icon: z.string().optional(),
+  icon: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((o) => o || undefined),
 })
 
 export const PublicRecord = z.object({
@@ -24,10 +32,22 @@ export const PublicRecord = z.object({
   updatedAt: z.string(),
 
   name: z.string(),
-  type: z.string().optional(),
+  type: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((o) => o || undefined),
 
-  data: z.record(z.string(), z.string()).optional(),
-  metadata: z.array(z.tuple([z.string(), z.string()])).optional(),
+  data: z
+    .record(z.string(), z.string())
+    .nullable()
+    .optional()
+    .transform((o) => o || undefined),
+  metadata: z
+    .array(z.tuple([z.string(), z.string()]))
+    .nullable()
+    .optional()
+    .transform((o) => o || undefined),
 })
 
 export type SessionUserType = z.infer<typeof SessionUser>
