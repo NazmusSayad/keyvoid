@@ -28,7 +28,7 @@ export function Hero() {
             </Button>
             <Button asChild variant="outline" size="lg">
               <a
-                href="https://github.com/sayad"
+                href="https://github.com/NazmusSayad/keyvoid"
                 target="_blank"
                 rel="noreferrer"
               >
