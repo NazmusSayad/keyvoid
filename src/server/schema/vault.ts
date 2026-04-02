@@ -10,7 +10,7 @@ export const PublicVault = z.object({
   icon: z.string().nullable(),
 })
 
-export const PublicVaultRecord = z.object({
+export const PublicRecord = z.object({
   id: z.string(),
 
   createdAt: z.string(),
@@ -24,4 +24,4 @@ export const PublicVaultRecord = z.object({
 })
 
 export type PublicVaultType = z.infer<typeof PublicVault>
-export type PublicVaultRecordType = z.infer<typeof PublicVaultRecord>
+export type PublicRecordType = z.infer<typeof PublicRecord>
