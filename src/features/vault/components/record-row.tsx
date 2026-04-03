@@ -1,8 +1,19 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { TableCell, TableRow } from '@/components/ui/table'
 import type { PublicRecordType } from '@/lib/schema'
-import { MoreVerticalIcon, NoteIcon } from '@hugeicons/core-free-icons'
+import {
+  Delete02Icon,
+  FolderEditIcon,
+  MoreVerticalIcon,
+  NoteIcon,
+} from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ViewRecordDialog } from './view-record-dialog'
@@ -62,19 +73,33 @@ export function RecordRow({ record }: RecordRowProps) {
         </TableCell>
 
         <TableCell className="text-right">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="-mr-1"
-            onClick={(event) => {
-              event.preventDefault()
-              event.stopPropagation()
-            }}
-          >
-            <HugeiconsIcon icon={MoreVerticalIcon} className="size-4" />
-            <span className="sr-only">Record actions</span>
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="-mr-1"
+                onClick={(event) => {
+                  event.preventDefault()
+                  event.stopPropagation()
+                }}
+              >
+                <HugeiconsIcon icon={MoreVerticalIcon} className="size-4" />
+                <span className="sr-only">Record actions</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>
+                <HugeiconsIcon icon={FolderEditIcon} className="size-4" />
+                Edit Record
+              </DropdownMenuItem>
+              <DropdownMenuItem variant="destructive">
+                <HugeiconsIcon icon={Delete02Icon} className="size-4" />
+                Delete Record
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </TableCell>
       </TableRow>
 
