@@ -104,7 +104,6 @@ export function VaultAuthedPage() {
       </BetterScrollArea>
 
       <CreateRecordDialog
-        vaultId={vault.id}
         open={isCreateRecordDialogOpen}
         onOpenChange={setIsCreateRecordDialogOpen}
       />
