@@ -39,27 +39,27 @@ export function SignupPage() {
     setError(undefined)
     setNotice(undefined)
 
-    await requestSignUpOTPAction({
-      email: data.email,
-      name: data.name,
-      password: data.password,
-    })
-      .then((result) => {
-        setFlowData({
-          email: data.email,
-          name: data.name,
-          password: data.password,
-          tokens: [result.token],
-        })
-        setNotice('Verification code sent to your email.')
+    try {
+      const result = await requestSignUpOTPAction({
+        email: data.email,
+        name: data.name,
+        password: data.password,
       })
-      .catch((nextError) => {
-        setError(
-          nextError instanceof Error
-            ? nextError.message
-            : 'Could not send verification code.'
-        )
+
+      setFlowData({
+        email: data.email,
+        name: data.name,
+        password: data.password,
+        tokens: [result.token],
       })
+      setNotice('Verification code sent to your email.')
+    } catch (nextError) {
+      setError(
+        nextError instanceof Error
+          ? nextError.message
+          : 'Could not send verification code.'
+      )
+    }
   }
 
   async function handleConfirmSubmit(data: { otp: string }) {
@@ -70,28 +70,28 @@ export function SignupPage() {
     setError(undefined)
     setNotice(undefined)
 
-    await confirmSignUpOTPAction({
-      email: flowData.email,
-      name: flowData.name,
-      otp: data.otp,
-      password: flowData.password,
-      tokens: flowData.tokens,
-    })
-      .then((result) => {
-        setSession(result.user)
-        queryClient.setQueryData(['auth-session'], { user: result.user })
-        window.location.assign('/')
+    try {
+      const result = await confirmSignUpOTPAction({
+        email: flowData.email,
+        name: flowData.name,
+        otp: data.otp,
+        password: flowData.password,
+        tokens: flowData.tokens,
       })
-      .catch((nextError) => {
-        setError(
-          nextError instanceof Error
-            ? nextError.message
-            : 'Could not verify your code.'
-        )
-      })
+
+      setSession(result.user)
+      queryClient.setQueryData(['auth-session'], { user: result.user })
+      window.location.assign('/')
+    } catch (nextError) {
+      setError(
+        nextError instanceof Error
+          ? nextError.message
+          : 'Could not verify your code.'
+      )
+    }
   }
 
-  function handleResendCode() {
+  async function handleResendCode() {
     if (!flowData) {
       return
     }
@@ -100,28 +100,27 @@ export function SignupPage() {
     setNotice(undefined)
     setIsResendingCode(true)
 
-    requestSignUpOTPAction({
-      email: flowData.email,
-      name: flowData.name,
-      password: flowData.password,
-    })
-      .then((result) => {
-        setFlowData({
-          ...flowData,
-          tokens: [...flowData.tokens, result.token].slice(-5),
-        })
-        setNotice('A fresh code is on the way.')
+    try {
+      const result = await requestSignUpOTPAction({
+        email: flowData.email,
+        name: flowData.name,
+        password: flowData.password,
       })
-      .catch((nextError) => {
-        setError(
-          nextError instanceof Error
-            ? nextError.message
-            : 'Could not resend verification code.'
-        )
+
+      setFlowData({
+        ...flowData,
+        tokens: [...flowData.tokens, result.token].slice(-5),
       })
-      .finally(() => {
-        setIsResendingCode(false)
-      })
+      setNotice('A fresh code is on the way.')
+    } catch (nextError) {
+      setError(
+        nextError instanceof Error
+          ? nextError.message
+          : 'Could not resend verification code.'
+      )
+    } finally {
+      setIsResendingCode(false)
+    }
   }
 
   return (
@@ -225,20 +224,18 @@ export function SignupPage() {
                     setError(undefined)
                     setIsSocialAuthPending(true)
 
-                    await getSocialAuthUrlAction('github')
-                      .then((result) => {
-                        window.location.assign(result.url)
-                      })
-                      .catch((nextError) => {
-                        setError(
-                          nextError instanceof Error
-                            ? nextError.message
-                            : 'Could not start GitHub sign up.'
-                        )
-                      })
-                      .finally(() => {
-                        setIsSocialAuthPending(false)
-                      })
+                    try {
+                      const result = await getSocialAuthUrlAction('github')
+                      window.location.assign(result.url)
+                    } catch (nextError) {
+                      setError(
+                        nextError instanceof Error
+                          ? nextError.message
+                          : 'Could not start GitHub sign up.'
+                      )
+                    } finally {
+                      setIsSocialAuthPending(false)
+                    }
                   }}
                 >
                   <HugeiconsIcon icon={GithubIcon} size={20} />
@@ -253,20 +250,18 @@ export function SignupPage() {
                     setError(undefined)
                     setIsSocialAuthPending(true)
 
-                    await getSocialAuthUrlAction('google')
-                      .then((result) => {
-                        window.location.assign(result.url)
-                      })
-                      .catch((nextError) => {
-                        setError(
-                          nextError instanceof Error
-                            ? nextError.message
-                            : 'Could not start Google sign up.'
-                        )
-                      })
-                      .finally(() => {
-                        setIsSocialAuthPending(false)
-                      })
+                    try {
+                      const result = await getSocialAuthUrlAction('google')
+                      window.location.assign(result.url)
+                    } catch (nextError) {
+                      setError(
+                        nextError instanceof Error
+                          ? nextError.message
+                          : 'Could not start Google sign up.'
+                      )
+                    } finally {
+                      setIsSocialAuthPending(false)
+                    }
                   }}
                 >
                   <HugeiconsIcon icon={GoogleIcon} size={20} />

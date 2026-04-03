@@ -43,21 +43,21 @@ export function LoginPage() {
               onSubmit={async (data) => {
                 setError(undefined)
 
-                await signInAction(data)
-                  .then((result) => {
-                    setSession(result.user)
-                    queryClient.setQueryData(['auth-session'], {
-                      user: result.user,
-                    })
-                    window.location.assign('/')
+                try {
+                  const result = await signInAction(data)
+
+                  setSession(result.user)
+                  queryClient.setQueryData(['auth-session'], {
+                    user: result.user,
                   })
-                  .catch((nextError) => {
-                    setError(
-                      nextError instanceof Error
-                        ? nextError.message
-                        : 'Could not sign you in.'
-                    )
-                  })
+                  window.location.assign('/')
+                } catch (nextError) {
+                  setError(
+                    nextError instanceof Error
+                      ? nextError.message
+                      : 'Could not sign you in.'
+                  )
+                }
               }}
             />
           </div>
@@ -87,20 +87,18 @@ export function LoginPage() {
                 setError(undefined)
                 setIsSocialAuthPending(true)
 
-                await getSocialAuthUrlAction('github')
-                  .then((result) => {
-                    window.location.assign(result.url)
-                  })
-                  .catch((nextError) => {
-                    setError(
-                      nextError instanceof Error
-                        ? nextError.message
-                        : 'Could not start GitHub sign in.'
-                    )
-                  })
-                  .finally(() => {
-                    setIsSocialAuthPending(false)
-                  })
+                try {
+                  const result = await getSocialAuthUrlAction('github')
+                  window.location.assign(result.url)
+                } catch (nextError) {
+                  setError(
+                    nextError instanceof Error
+                      ? nextError.message
+                      : 'Could not start GitHub sign in.'
+                  )
+                } finally {
+                  setIsSocialAuthPending(false)
+                }
               }}
             >
               <HugeiconsIcon icon={GithubIcon} size={20} />
@@ -115,20 +113,18 @@ export function LoginPage() {
                 setError(undefined)
                 setIsSocialAuthPending(true)
 
-                await getSocialAuthUrlAction('google')
-                  .then((result) => {
-                    window.location.assign(result.url)
-                  })
-                  .catch((nextError) => {
-                    setError(
-                      nextError instanceof Error
-                        ? nextError.message
-                        : 'Could not start Google sign in.'
-                    )
-                  })
-                  .finally(() => {
-                    setIsSocialAuthPending(false)
-                  })
+                try {
+                  const result = await getSocialAuthUrlAction('google')
+                  window.location.assign(result.url)
+                } catch (nextError) {
+                  setError(
+                    nextError instanceof Error
+                      ? nextError.message
+                      : 'Could not start Google sign in.'
+                  )
+                } finally {
+                  setIsSocialAuthPending(false)
+                }
               }}
             >
               <HugeiconsIcon icon={GoogleIcon} size={20} />

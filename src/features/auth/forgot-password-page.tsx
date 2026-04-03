@@ -29,23 +29,23 @@ export function ForgotPasswordPage() {
     setError(undefined)
     setNotice(undefined)
 
-    await requestResetPasswordOTPAction({
-      email: data.email,
-    })
-      .then((result) => {
-        setFlowData({
-          email: data.email,
-          tokens: [result.token],
-        })
-        setNotice('Recovery code sent to your email.')
+    try {
+      const result = await requestResetPasswordOTPAction({
+        email: data.email,
       })
-      .catch((nextError) => {
-        setError(
-          nextError instanceof Error
-            ? nextError.message
-            : 'Could not send recovery code.'
-        )
+
+      setFlowData({
+        email: data.email,
+        tokens: [result.token],
       })
+      setNotice('Recovery code sent to your email.')
+    } catch (nextError) {
+      setError(
+        nextError instanceof Error
+          ? nextError.message
+          : 'Could not send recovery code.'
+      )
+    }
   }
 
   async function handleConfirmSubmit(data: {
@@ -60,27 +60,27 @@ export function ForgotPasswordPage() {
     setError(undefined)
     setNotice(undefined)
 
-    await confirmResetPasswordOTPAction({
-      email: flowData.email,
-      otp: data.otp,
-      password: data.password,
-      tokens: flowData.tokens,
-    })
-      .then((result) => {
-        setSession(result.user)
-        queryClient.setQueryData(['auth-session'], { user: result.user })
-        window.location.assign('/')
+    try {
+      const result = await confirmResetPasswordOTPAction({
+        email: flowData.email,
+        otp: data.otp,
+        password: data.password,
+        tokens: flowData.tokens,
       })
-      .catch((nextError) => {
-        setError(
-          nextError instanceof Error
-            ? nextError.message
-            : 'Could not reset your password.'
-        )
-      })
+
+      setSession(result.user)
+      queryClient.setQueryData(['auth-session'], { user: result.user })
+      window.location.assign('/')
+    } catch (nextError) {
+      setError(
+        nextError instanceof Error
+          ? nextError.message
+          : 'Could not reset your password.'
+      )
+    }
   }
 
-  function handleResendCode() {
+  async function handleResendCode() {
     if (!flowData) {
       return
     }
@@ -89,26 +89,25 @@ export function ForgotPasswordPage() {
     setNotice(undefined)
     setIsResendingCode(true)
 
-    requestResetPasswordOTPAction({
-      email: flowData.email,
-    })
-      .then((result) => {
-        setFlowData({
-          ...flowData,
-          tokens: [...flowData.tokens, result.token].slice(-5),
-        })
-        setNotice('A fresh code is on the way.')
+    try {
+      const result = await requestResetPasswordOTPAction({
+        email: flowData.email,
       })
-      .catch((nextError) => {
-        setError(
-          nextError instanceof Error
-            ? nextError.message
-            : 'Could not resend the code.'
-        )
+
+      setFlowData({
+        ...flowData,
+        tokens: [...flowData.tokens, result.token].slice(-5),
       })
-      .finally(() => {
-        setIsResendingCode(false)
-      })
+      setNotice('A fresh code is on the way.')
+    } catch (nextError) {
+      setError(
+        nextError instanceof Error
+          ? nextError.message
+          : 'Could not resend the code.'
+      )
+    } finally {
+      setIsResendingCode(false)
+    }
   }
 
   return (
