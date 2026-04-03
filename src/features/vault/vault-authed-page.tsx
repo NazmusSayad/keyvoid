@@ -19,7 +19,7 @@ import {
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { CreateRecordDialog } from './components/create-record-dialog'
-import { VaultRecordsList } from './components/vault-records-list'
+import { RecordsList } from './components/records-list'
 import { resolveVaultIcon } from './constants/vault-icons'
 import { useVaultContext } from './contexts/vault-context'
 
@@ -95,7 +95,7 @@ export function VaultAuthedPage() {
               </div>
             </section>
           ) : (
-            <VaultRecordsList records={records} />
+            <RecordsList records={records} />
           )}
         </Wrapper>
       </BetterScrollArea>
