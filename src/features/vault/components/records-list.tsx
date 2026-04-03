@@ -357,7 +357,6 @@ export function RecordsList({ records }: { records: PublicRecordType[] }) {
                   <RecordRow
                     key={row.original.record.id}
                     record={row.original.record}
-                    tags={row.original.tags}
                   />
                 ))
             )}

@@ -9,12 +9,12 @@ import { ViewRecordDialog } from './view-record-dialog'
 
 type RecordRowProps = {
   record: PublicRecordType
-  tags: string[]
 }
 
-export function RecordRow({ record, tags }: RecordRowProps) {
+export function RecordRow({ record }: RecordRowProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const tags: string[] = []
 
   return (
     <>
