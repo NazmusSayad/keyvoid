@@ -18,6 +18,7 @@ import {
   NoteIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { useState } from 'react'
 import { CreateRecordDialog } from './components/create-record-dialog'
 import { RecordsList } from './components/records-list'
 import { resolveVaultIcon } from './constants/vault-icons'
@@ -25,6 +26,8 @@ import { useVaultContext } from './contexts/vault-context'
 
 export function VaultAuthedPage() {
   const { vault, records } = useVaultContext()
+  const [isCreateRecordDialogOpen, setIsCreateRecordDialogOpen] =
+    useState(false)
 
   return (
     <div className="grid size-full grid-rows-[auto_1fr]">
@@ -38,31 +41,42 @@ export function VaultAuthedPage() {
             {vault.name}
           </h1>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <HugeiconsIcon icon={MoreVerticalIcon} className="size-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <HugeiconsIcon icon={NoteIcon} className="size-4" />
-                Edit Vault
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <HugeiconsIcon icon={LockIcon} className="size-4" />
-                Lock Vault
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <HugeiconsIcon icon={Key01Icon} className="size-4" />
-                Change Secret
-              </DropdownMenuItem>
-              <DropdownMenuItem variant="destructive">
-                <HugeiconsIcon icon={Delete02Icon} className="size-4" />
-                Delete Vault
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsCreateRecordDialogOpen(true)}
+            >
+              <HugeiconsIcon icon={File01Icon} className="size-4" />
+              Create record
+            </Button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <HugeiconsIcon icon={MoreVerticalIcon} className="size-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                  <HugeiconsIcon icon={NoteIcon} className="size-4" />
+                  Edit Vault
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <HugeiconsIcon icon={LockIcon} className="size-4" />
+                  Lock Vault
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <HugeiconsIcon icon={Key01Icon} className="size-4" />
+                  Change Secret
+                </DropdownMenuItem>
+                <DropdownMenuItem variant="destructive">
+                  <HugeiconsIcon icon={Delete02Icon} className="size-4" />
+                  Delete Vault
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </Wrapper>
       </header>
 
@@ -82,23 +96,18 @@ export function VaultAuthedPage() {
                   and value fields.
                 </p>
               </div>
-              <div className="mt-6 flex justify-center">
-                <CreateRecordDialog
-                  vaultId={vault.id}
-                  trigger={
-                    <Button>
-                      <HugeiconsIcon icon={File01Icon} className="size-4" />
-                      Create record
-                    </Button>
-                  }
-                />
-              </div>
             </section>
           ) : (
             <RecordsList records={records} />
           )}
         </Wrapper>
       </BetterScrollArea>
+
+      <CreateRecordDialog
+        vaultId={vault.id}
+        open={isCreateRecordDialogOpen}
+        onOpenChange={setIsCreateRecordDialogOpen}
+      />
     </div>
   )
 }
