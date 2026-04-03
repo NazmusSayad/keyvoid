@@ -179,7 +179,7 @@ function CreateRecordDialogContent({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Record name</FormLabel>
+                    <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input {...field} placeholder="Primary database" />
                     </FormControl>
@@ -193,7 +193,7 @@ function CreateRecordDialogContent({
                 name="type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Record type</FormLabel>
+                    <FormLabel>Type</FormLabel>
                     <FormControl>
                       <Select
                         value={selectedType}
@@ -229,6 +229,7 @@ function CreateRecordDialogContent({
                               key={recordType.id}
                               value={recordType.id}
                             >
+                              <HugeiconsIcon icon={recordType.icon} />
                               {recordType.name}
                             </SelectItem>
                           ))}
