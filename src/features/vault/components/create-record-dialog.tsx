@@ -58,7 +58,7 @@ export function CreateRecordDialog({
   onOpenChange,
 }: RecordCreateDialogProps) {
   return (
-    <BetterDialog open={open} onOpenChange={onOpenChange} width="56rem">
+    <BetterDialog open={open} onOpenChange={onOpenChange}>
       <CreateRecordDialogContent onOpenChange={onOpenChange} />
     </BetterDialog>
   )
