@@ -32,7 +32,7 @@ import { useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { VAULT_ICONS } from './constants/vault-icons'
+import { VAULT_ICONS } from '../constants/vault-icons'
 
 const vaultCreateFormSchema = z.object({
   auth: z.string().trim().min(1, 'Enter a vault PIN.'),

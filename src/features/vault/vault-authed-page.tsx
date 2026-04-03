@@ -35,12 +35,12 @@ export function VaultAuthedPage() {
 
   return (
     <div className="grid size-full grid-rows-[auto_1fr]">
-      <header className="border-border border-b">
-        <Wrapper className="flex flex-col items-start gap-4 py-4 md:flex-row md:items-center md:justify-between">
-          <h1 className="flex items-center gap-2 text-xl font-bold tracking-tight">
+      <header className="border-border/50 border-b">
+        <Wrapper className="flex h-14 flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
+          <h1 className="flex items-center gap-2 text-lg font-bold tracking-tight">
             <HugeiconsIcon
               icon={resolveVaultIcon(vault.icon)}
-              className="size-5"
+              className="size-4.5"
             />
             {vault.name}
           </h1>
