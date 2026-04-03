@@ -51,7 +51,7 @@ export type CreateRecordFormValues = {
   tags: string[]
 
   data: Record<string, string>
-  metadata: Array<{ key: string; value: string }>
+  metadata: Array<[string, string]>
 }
 
 export function CreateRecordDialog({
@@ -114,7 +114,7 @@ function CreateRecordDialogContent({
               const metadata = values.metadata
                 .map(
                   (field) =>
-                    [field.key.trim(), field.value.trim()] as [string, string]
+                    [field[0].trim(), field[1].trim()] as [string, string]
                 )
                 .filter((field) => field[0].length > 0 && field[1].length > 0)
 

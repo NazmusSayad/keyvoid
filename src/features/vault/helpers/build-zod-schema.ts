@@ -39,12 +39,7 @@ export function buildRecordCreateFormSchema(
           )
           .strict()
       : z.record(z.string(), z.string()),
-    metadata: z.array(
-      z.object({
-        key: z.string(),
-        value: z.string(),
-      })
-    ),
+    metadata: z.array(z.tuple([z.string(), z.string()])),
     tags: z.array(z.string()),
   })
 }

@@ -36,7 +36,7 @@ export function CreateRecordMetadataForm({
         >
           <FormField
             control={form.control}
-            name={`metadata.${index}.key`}
+            name={`metadata.${index}.0`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Key</FormLabel>
@@ -50,7 +50,7 @@ export function CreateRecordMetadataForm({
 
           <FormField
             control={form.control}
-            name={`metadata.${index}.value`}
+            name={`metadata.${index}.1`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Value</FormLabel>
@@ -79,7 +79,7 @@ export function CreateRecordMetadataForm({
       <Button
         type="button"
         variant="outline"
-        onClick={() => metadataFieldArray.append({ key: '', value: '' })}
+        onClick={() => metadataFieldArray.append(['', ''])}
       >
         <HugeiconsIcon icon={Add01Icon} className="size-4" />
         Add field
