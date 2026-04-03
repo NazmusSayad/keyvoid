@@ -1,4 +1,4 @@
-type RecordTypeDetails = {
+export type RecordTypeDetails = {
   id: string
   name: string
   type: FieldInputType
