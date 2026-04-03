@@ -8,13 +8,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
 import { Wrapper } from '@/components/wrapper'
 import {
   Delete02Icon,
@@ -26,7 +19,7 @@ import {
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { CreateRecordDialog } from './components/create-record-dialog'
-import { RecordRow } from './components/record-row'
+import { VaultRecordsList } from './components/vault-records-list'
 import { resolveVaultIcon } from './constants/vault-icons'
 import { useVaultContext } from './contexts/vault-context'
 
@@ -102,20 +95,7 @@ export function VaultAuthedPage() {
               </div>
             </section>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Updated</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {records.map((record) => (
-                  <RecordRow key={record.id} record={record} />
-                ))}
-              </TableBody>
-            </Table>
+            <VaultRecordsList records={records} />
           )}
         </Wrapper>
       </BetterScrollArea>
