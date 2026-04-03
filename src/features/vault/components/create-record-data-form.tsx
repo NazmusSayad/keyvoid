@@ -16,24 +16,19 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { RECORD_TYPES } from '@/features/vault/constants/types'
-import { useFormContext } from 'react-hook-form'
+import type { RecordTypeDetails } from '@/features/vault/constants/types'
+import type { UseFormReturn } from 'react-hook-form'
 import type { CreateRecordFormValues } from './create-record-dialog'
 
-export function CreateRecordDataForm() {
-  const form = useFormContext<CreateRecordFormValues>()
-  const selectedRecordType = RECORD_TYPES.find(
-    (recordType) => recordType.id === form.watch('type')
-  )
+type CreateRecordDataFormProps = {
+  form: UseFormReturn<CreateRecordFormValues>
+  selectedRecordType: RecordTypeDetails
+}
 
-  if (!selectedRecordType) {
-    return (
-      <p className="text-muted-foreground text-sm">
-        Choose a record type above to see its fields.
-      </p>
-    )
-  }
-
+export function CreateRecordDataForm({
+  form,
+  selectedRecordType,
+}: CreateRecordDataFormProps) {
   return (
     <div className="space-y-4">
       {selectedRecordType.fields.map((recordField) => (

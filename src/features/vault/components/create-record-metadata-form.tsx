@@ -12,11 +12,16 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Add01Icon, Delete02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { useFieldArray, useFormContext } from 'react-hook-form'
+import { useFieldArray, type UseFormReturn } from 'react-hook-form'
 import type { CreateRecordFormValues } from './create-record-dialog'
 
-export function CreateRecordMetadataForm() {
-  const form = useFormContext<CreateRecordFormValues>()
+type CreateRecordMetadataFormProps = {
+  form: UseFormReturn<CreateRecordFormValues>
+}
+
+export function CreateRecordMetadataForm({
+  form,
+}: CreateRecordMetadataFormProps) {
   const metadataFieldArray = useFieldArray({
     control: form.control,
     name: 'metadata',
