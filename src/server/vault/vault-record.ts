@@ -17,6 +17,7 @@ const createVaultRecordSchema = z.object({
   vaultId: z.string().trim().min(1, 'Vault is required.'),
 
   type: z.string().optional(),
+  tags: z.array(z.string()).optional(),
   data: z.string().optional(),
   metadata: z.string().optional(),
 })
@@ -27,6 +28,7 @@ const updateVaultRecordSchema = z.object({
   vaultId: z.string().trim().min(1, 'Vault is required.'),
 
   type: z.string().optional(),
+  tags: z.array(z.string()).optional(),
   data: z.string().optional(),
   metadata: z.string().optional(),
 })
@@ -144,6 +146,7 @@ export async function createVaultRecordAction(
     data: {
       name: body.name,
       type: body.type,
+      tags: body.tags,
       vaultId: body.vaultId,
       ...(await encryptRecordServer(body)),
     },
@@ -182,6 +185,7 @@ export async function updateVaultRecordAction(
     data: {
       name: body.name,
       type: body.type,
+      tags: body.tags,
       ...(await encryptRecordServer(body)),
     },
   })
