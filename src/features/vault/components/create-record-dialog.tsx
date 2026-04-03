@@ -29,7 +29,6 @@ import { createVaultRecordAction } from '@/server/vault/vault-record'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { File01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { useMutation } from '@tanstack/react-query'
 import { useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -50,6 +49,7 @@ export type CreateRecordFormValues = {
   data: Record<string, string>
   metadata: Array<{ key: string; value: string }>
   name: string
+  tags: string[]
   type: string
 }
 
@@ -82,48 +82,11 @@ function CreateRecordDialogContent({
     defaultValues: {
       name: '',
       type: '',
+      tags: [],
       data: {},
       metadata: [],
     },
     resolver: zodResolver(recordCreateFormSchema),
-  })
-  const createRecordMutation = useMutation({
-    mutationFn: async (input: {
-      data: Record<string, string>
-      metadata: [string, string][]
-      name: string
-      type: string
-    }) => {
-      if (!secret) {
-        throw new Error('Unlock this vault first.')
-      }
-
-      const encrypted = await encryptRecordClient({
-        key: secret,
-        data: input.data,
-        metadata: input.metadata.length > 0 ? input.metadata : undefined,
-      })
-
-      return createVaultRecordAction({
-        auth: secret,
-        data: encrypted.data ?? undefined,
-        metadata: encrypted.metadata ?? undefined,
-        name: input.name,
-        type: input.type,
-        vaultId: vault.id,
-      })
-    },
-    onSuccess: async () => {
-      onOpenChange(false)
-
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['vault', vault.id] }),
-        queryClient.invalidateQueries({ queryKey: ['vault-record', vault.id] }),
-        queryClient.invalidateQueries({ queryKey: ['vaults'] }),
-      ])
-
-      toast.success('Record created.')
-    },
   })
 
   return (
@@ -134,43 +97,67 @@ function CreateRecordDialogContent({
       footerCancel
       footerSubmit="Create record"
       footerSubmitIcon={<HugeiconsIcon icon={File01Icon} className="size-4" />}
-      footerSubmitLoading={createRecordMutation.isPending}
+      footerSubmitLoading={form.formState.isSubmitting}
       onFooterSubmitClick={() => formRef.current?.requestSubmit()}
     >
       <Form {...form}>
         <form
           ref={formRef}
           className="space-y-6"
-          onSubmit={form.handleSubmit((values) => {
-            createRecordMutation.mutate(
-              {
-                data: values.data,
-                metadata: values.metadata
-                  .map(
-                    (field) =>
-                      [field.key.trim(), field.value.trim()] as [string, string]
-                  )
-                  .filter(
-                    (field) => field[0].length > 0 && field[1].length > 0
-                  ),
-                name: values.name,
-                type: values.type,
-              },
-              {
-                onError: (mutationError) => {
-                  form.setError('root', {
-                    message:
-                      mutationError instanceof Error
-                        ? mutationError.message
-                        : 'Could not create the record.',
-                  })
-                },
+          onSubmit={form.handleSubmit(async (values) => {
+            try {
+              if (!secret) {
+                throw new Error('Unlock this vault first.')
               }
-            )
+
+              const metadata = values.metadata
+                .map(
+                  (field) =>
+                    [field.key.trim(), field.value.trim()] as [string, string]
+                )
+                .filter((field) => field[0].length > 0 && field[1].length > 0)
+
+              const encrypted = await encryptRecordClient({
+                key: secret,
+                data: values.data,
+                metadata: metadata.length > 0 ? metadata : undefined,
+              })
+
+              await createVaultRecordAction({
+                auth: secret,
+                data: encrypted.data ?? undefined,
+                metadata: encrypted.metadata ?? undefined,
+                name: values.name,
+                tags: values.tags,
+                type: values.type,
+                vaultId: vault.id,
+              })
+
+              onOpenChange(false)
+
+              await Promise.all([
+                queryClient.invalidateQueries({
+                  queryKey: ['vault', vault.id],
+                }),
+                queryClient.invalidateQueries({
+                  queryKey: ['vault-record', vault.id],
+                }),
+                queryClient.invalidateQueries({ queryKey: ['vaults'] }),
+              ])
+
+              toast.success('Record created.')
+            } catch (mutationError) {
+              form.setError('root', {
+                message:
+                  mutationError instanceof Error
+                    ? mutationError.message
+                    : 'Could not create the record.',
+              })
+            }
           })}
         >
           <fieldset
-            disabled={createRecordMutation.isPending}
+            disabled={form.formState.isSubmitting}
             className="space-y-6 disabled:pointer-events-none disabled:opacity-80"
           >
             <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_16rem]">

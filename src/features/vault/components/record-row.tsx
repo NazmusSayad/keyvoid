@@ -9,6 +9,7 @@ import {
 import { TableCell, TableRow } from '@/components/ui/table'
 import type { PublicRecordType } from '@/lib/public-schema'
 import {
+  ArrowRight02Icon,
   Delete02Icon,
   FolderEditIcon,
   MoreVerticalIcon,
@@ -93,6 +94,12 @@ export function RecordRow({ record }: RecordRowProps) {
                 <HugeiconsIcon icon={FolderEditIcon} className="size-4" />
                 Edit Record
               </DropdownMenuItem>
+
+              <DropdownMenuItem>
+                <HugeiconsIcon icon={ArrowRight02Icon} className="size-4" />
+                Move to Vault
+              </DropdownMenuItem>
+
               <DropdownMenuItem variant="destructive">
                 <HugeiconsIcon icon={Delete02Icon} className="size-4" />
                 Delete Record

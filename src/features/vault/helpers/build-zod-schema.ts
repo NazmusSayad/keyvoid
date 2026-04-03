@@ -45,5 +45,6 @@ export function buildRecordCreateFormSchema(
         value: z.string(),
       })
     ),
+    tags: z.array(z.string()),
   })
 }
