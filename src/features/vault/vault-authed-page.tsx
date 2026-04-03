@@ -1,6 +1,6 @@
 'use client'
 
-import { BetterScrollAreaFaded } from '@/components/ui/better-scroll-area'
+import { BetterScrollArea } from '@/components/ui/better-scroll-area'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -73,8 +73,8 @@ export function VaultAuthedPage() {
         </Wrapper>
       </header>
 
-      <BetterScrollAreaFaded>
-        <Wrapper className="py-6">
+      <BetterScrollArea>
+        <Wrapper>
           {records.length === 0 ? (
             <section className="border-border bg-card rounded-[2rem] border p-8 text-center shadow-sm sm:p-12">
               <div className="bg-muted mx-auto flex size-16 items-center justify-center rounded-3xl">
@@ -102,25 +102,23 @@ export function VaultAuthedPage() {
               </div>
             </section>
           ) : (
-            <section className="border-border bg-card overflow-hidden rounded-[2rem] border shadow-sm">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Updated</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {records.map((record) => (
-                    <RecordRow key={record.id} record={record} />
-                  ))}
-                </TableBody>
-              </Table>
-            </section>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Updated</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {records.map((record) => (
+                  <RecordRow key={record.id} record={record} />
+                ))}
+              </TableBody>
+            </Table>
           )}
         </Wrapper>
-      </BetterScrollAreaFaded>
+      </BetterScrollArea>
     </div>
   )
 }
