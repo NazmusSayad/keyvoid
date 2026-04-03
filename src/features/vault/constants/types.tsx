@@ -1,17 +1,23 @@
 type RecordTypeDetails = {
   id: string
   name: string
-  type: InputType
+  type: FieldInputType
   fields: {
     id: string
     name: string
-    type: InputType
+    type: FieldInputType
     required?: boolean
   }[]
 }
 
-export const INPUT_TYPES = ['text', 'textarea', 'number', 'boolean'] as const
-type InputType = (typeof INPUT_TYPES)[number]
+export const FIELD_INPUT_TYPES = [
+  'text',
+  'textarea',
+  'number',
+  'boolean',
+] as const
+
+export type FieldInputType = (typeof FIELD_INPUT_TYPES)[number]
 
 export const RECORD_TYPES: RecordTypeDetails[] = [
   {
