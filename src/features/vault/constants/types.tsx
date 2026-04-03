@@ -1,3 +1,10 @@
+import {
+  ApiIcon,
+  LoginMethodIcon,
+  Note05Icon,
+} from '@hugeicons/core-free-icons'
+import { IconSvgElement } from '@hugeicons/react'
+
 export const FIELD_INPUT_TYPES = [
   'text',
   'textarea',
@@ -17,6 +24,7 @@ export type RecordTypeDetailsField = {
 export type RecordTypeDetails = {
   id: string
   name: string
+  icon: IconSvgElement
   fields: RecordTypeDetailsField[]
 }
 
@@ -24,6 +32,7 @@ export const RECORD_TYPES: RecordTypeDetails[] = [
   {
     id: 'password',
     name: 'Password',
+    icon: LoginMethodIcon,
     fields: [
       {
         id: 'username',
@@ -47,6 +56,7 @@ export const RECORD_TYPES: RecordTypeDetails[] = [
   {
     id: 'NOTE',
     name: 'Note',
+    icon: Note05Icon,
     fields: [
       {
         id: 'content',
@@ -60,6 +70,7 @@ export const RECORD_TYPES: RecordTypeDetails[] = [
   {
     id: 'apiKey',
     name: 'API Key',
+    icon: ApiIcon,
     fields: [
       {
         id: 'key',

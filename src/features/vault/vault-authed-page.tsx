@@ -12,10 +12,11 @@ import { Wrapper } from '@/components/wrapper'
 import {
   Delete02Icon,
   File01Icon,
-  Key01Icon,
-  LockIcon,
+  FolderEditIcon,
+  LogoutSquare02Icon,
   MoreVerticalIcon,
-  NoteIcon,
+  ShieldKeyIcon,
+  TaskAdd02Icon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useState } from 'react'
@@ -44,10 +45,9 @@ export function VaultAuthedPage() {
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
-              size="sm"
               onClick={() => setIsCreateRecordDialogOpen(true)}
             >
-              <HugeiconsIcon icon={File01Icon} className="size-4" />
+              <HugeiconsIcon icon={TaskAdd02Icon} className="size-4" />
               Create record
             </Button>
 
@@ -59,15 +59,15 @@ export function VaultAuthedPage() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>
-                  <HugeiconsIcon icon={NoteIcon} className="size-4" />
+                  <HugeiconsIcon icon={FolderEditIcon} className="size-4" />
                   Edit Vault
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <HugeiconsIcon icon={LockIcon} className="size-4" />
+                  <HugeiconsIcon icon={LogoutSquare02Icon} className="size-4" />
                   Lock Vault
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <HugeiconsIcon icon={Key01Icon} className="size-4" />
+                  <HugeiconsIcon icon={ShieldKeyIcon} className="size-4" />
                   Change Secret
                 </DropdownMenuItem>
                 <DropdownMenuItem variant="destructive">
