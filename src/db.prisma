@@ -29,6 +29,7 @@ model Vault {
 
   name String
   icon String?
+  tags String[] @default([])
 
   testAuthHash   String
   lastAccessedAt DateTime?
