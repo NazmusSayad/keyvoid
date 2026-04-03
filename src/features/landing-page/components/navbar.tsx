@@ -19,11 +19,17 @@ export function Navbar() {
           <span className="font-mono text-xl">KeyVoid</span>
         </Link>
 
-        <Button asChild variant="ghost" className="px-3" size="lg">
-          <Link href="/auth/signup">
-            <HugeiconsIcon size={16} icon={StartUp02Icon} /> Get Started
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button asChild className="px-3" variant="ghost" size="lg">
+            <Link href="/auth/login">Login</Link>
+          </Button>
+
+          <Button asChild className="px-3" size="lg">
+            <Link href="/auth/signup">
+              <HugeiconsIcon size={16} icon={StartUp02Icon} /> Get Started
+            </Link>
+          </Button>
+        </div>
       </Wrapper>
     </nav>
   )
