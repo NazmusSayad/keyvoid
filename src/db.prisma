@@ -29,7 +29,6 @@ model Vault {
 
   name String
   icon String?
-  tags String[] @default([])
 
   testAuthHash   String
   lastAccessedAt DateTime?
@@ -47,6 +46,7 @@ model VaultRecord {
 
   name String
   type String?
+  tags String[] @default([])
 
   data     String? // Record<string, string>
   metadata String? // [key: string, value: string][]
