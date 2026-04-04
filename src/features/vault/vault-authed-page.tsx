@@ -43,14 +43,6 @@ export function VaultAuthedPage() {
           </h1>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setIsCreateRecordDialogOpen(true)}
-            >
-              <HugeiconsIcon icon={TaskAdd02Icon} className="size-4" />
-              Create record
-            </Button>
-
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
@@ -76,6 +68,14 @@ export function VaultAuthedPage() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+
+            <Button
+              variant="outline"
+              onClick={() => setIsCreateRecordDialogOpen(true)}
+            >
+              <HugeiconsIcon icon={TaskAdd02Icon} className="size-4" />
+              Create record
+            </Button>
           </div>
         </Wrapper>
       </header>
