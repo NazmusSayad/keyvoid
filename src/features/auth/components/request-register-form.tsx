@@ -12,6 +12,9 @@ import {
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { ViewIcon, ViewOffIcon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -30,6 +33,8 @@ export function RequestRegisterForm({
   defaultData: Partial<RequestRegisterFormData>
   onSubmit: (data: RequestRegisterFormData) => Promise<void> | void
 }) {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
+
   const form = useForm({
     defaultValues: {
       email: defaultData.email ?? '',
@@ -69,7 +74,7 @@ export function RequestRegisterForm({
               <FormControl>
                 <Input
                   {...field}
-                  type="email"
+                  type="text"
                   placeholder="name@company.com"
                   disabled={form.formState.isSubmitting}
                 />
@@ -86,12 +91,27 @@ export function RequestRegisterForm({
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="password"
-                  placeholder="Password"
-                  disabled={form.formState.isSubmitting}
-                />
+                <div className="relative isolate">
+                  <Input
+                    {...field}
+                    type={isPasswordVisible ? 'text' : 'password'}
+                    placeholder="Password"
+                    disabled={form.formState.isSubmitting}
+                  />
+
+                  <Button
+                    size="sm"
+                    type="button"
+                    variant="ghost"
+                    className="absolute top-1/2 right-1.5 size-6 -translate-y-1/2"
+                    onClick={() => setIsPasswordVisible((prev) => !prev)}
+                  >
+                    <HugeiconsIcon
+                      className="size-3.5"
+                      icon={isPasswordVisible ? ViewIcon : ViewOffIcon}
+                    />
+                  </Button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -12,6 +12,8 @@ import { Spinner } from '@/components/ui/spinner'
 import { queryClient } from '@/lib/query-client'
 import { getVaultRecordsAction } from '@/server/vault/vault-record'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { ViewIcon, ViewOffIcon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -31,6 +33,7 @@ export function VaultSecretForm({
   confirmSecret,
 }: VaultSecretFormProps) {
   const [error, setError] = useState('')
+  const [isPinVisible, setIsPinVisible] = useState(false)
   const form = useForm({
     defaultValues: {
       pin: '',
@@ -82,13 +85,28 @@ export function VaultSecretForm({
             <FormItem>
               <FormLabel>Vault PIN</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="password"
-                  placeholder="Enter a vault PIN"
-                  autoComplete="current-password"
-                  disabled={confirmSecretMutation.isPending}
-                />
+                <div className="relative isolate">
+                  <Input
+                    {...field}
+                    type={isPinVisible ? 'text' : 'password'}
+                    placeholder="Enter a vault PIN"
+                    autoComplete="current-password"
+                    disabled={confirmSecretMutation.isPending}
+                  />
+
+                  <Button
+                    size="sm"
+                    type="button"
+                    variant="ghost"
+                    className="absolute top-1/2 right-1.5 size-6 -translate-y-1/2"
+                    onClick={() => setIsPinVisible((prev) => !prev)}
+                  >
+                    <HugeiconsIcon
+                      className="size-3.5"
+                      icon={isPinVisible ? ViewIcon : ViewOffIcon}
+                    />
+                  </Button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
