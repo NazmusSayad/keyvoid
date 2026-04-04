@@ -10,12 +10,7 @@ import { Button } from '@/components/ui/button'
 import { useVaultContext } from '@/features/vault/contexts/vault-context'
 import type { PublicRecordType } from '@/lib/public-schema'
 import { decryptRecordClient } from '@/lib/record-encrypt-client'
-import {
-  CheckmarkCircle03Icon,
-  Copy02Icon,
-  KeyIcon,
-  Tag01Icon,
-} from '@hugeicons/core-free-icons'
+import { CheckmarkCircle03Icon, Copy02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
@@ -23,7 +18,6 @@ import { useState } from 'react'
 type RecordDialogProps = {
   open: boolean
   onOpenChange(open: boolean): void
-
   record: PublicRecordType
 }
 
@@ -58,12 +52,23 @@ function ViewRecordDialogContent({ record }: RecordDialogProps) {
 
   const dataFields = Object.entries(decryptQuery.data?.data ?? {})
   const metadataFields = decryptQuery.data?.metadata ?? []
-  const hasTags = record.tags.length > 0 || record.type?.trim()
 
   return (
     <BetterDialogContent
-      title={record.name}
-      description={`Updated ${new Date(record.updatedAt).toLocaleDateString()}`}
+      title={
+        <div className="flex items-center gap-2">
+          <span>{record.name}</span>
+          {record.type?.trim() && (
+            <Badge
+              variant="secondary"
+              className="rounded-full px-2 py-0.5 text-xs font-medium capitalize"
+            >
+              {record.type}
+            </Badge>
+          )}
+        </div>
+      }
+      description={`Updated: ${new Date(record.updatedAt).toLocaleDateString()}`}
     >
       {decryptQuery.isPending ? (
         <RecordDialogSkeleton />
@@ -76,30 +81,6 @@ function ViewRecordDialogContent({ record }: RecordDialogProps) {
         </Alert>
       ) : (
         <div className="space-y-6">
-          {hasTags && (
-            <div className="flex flex-wrap items-center gap-2">
-              {record.type?.trim() && (
-                <Badge
-                  variant="secondary"
-                  className="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
-                >
-                  <HugeiconsIcon icon={KeyIcon} className="size-3" />
-                  {record.type}
-                </Badge>
-              )}
-              {record.tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant="outline"
-                  className="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs"
-                >
-                  <HugeiconsIcon icon={Tag01Icon} className="size-3" />
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          )}
-
           {dataFields.length > 0 && (
             <div className="bg-muted/30 divide-border divide-y rounded-lg border">
               {dataFields.map(([key, value]) => (
@@ -112,6 +93,20 @@ function ViewRecordDialogContent({ record }: RecordDialogProps) {
             <div className="bg-muted/30 divide-border divide-y rounded-lg border">
               {metadataFields.map(([key, value]) => (
                 <FieldRow key={key} label={key} value={value} />
+              ))}
+            </div>
+          )}
+
+          {record.tags.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2">
+              {record.tags.map((tag) => (
+                <Badge
+                  key={tag}
+                  variant="outline"
+                  className="rounded-full px-2.5 py-1 text-xs"
+                >
+                  {tag}
+                </Badge>
               ))}
             </div>
           )}
