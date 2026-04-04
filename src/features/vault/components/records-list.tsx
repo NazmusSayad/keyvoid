@@ -213,27 +213,6 @@ export function RecordsList({ records }: { records: PublicRecordType[] }) {
         />
 
         <div className="flex flex-wrap items-center gap-2">
-          <Select
-            value={typeFilterValue}
-            onValueChange={(value) => {
-              table
-                .getColumn('type')
-                ?.setFilterValue(value === 'all' ? undefined : value)
-            }}
-          >
-            <SelectTrigger className="h-10 min-w-44">
-              <SelectValue placeholder="All types" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All types</SelectItem>
-              {typeOptions.map((type) => (
-                <SelectItem key={type} value={type}>
-                  {type}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button type="button" variant="outline" className="h-10 min-w-44">
@@ -288,6 +267,27 @@ export function RecordsList({ records }: { records: PublicRecordType[] }) {
               ) : null}
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <Select
+            value={typeFilterValue}
+            onValueChange={(value) => {
+              table
+                .getColumn('type')
+                ?.setFilterValue(value === 'all' ? undefined : value)
+            }}
+          >
+            <SelectTrigger className="h-10 min-w-44">
+              <SelectValue placeholder="All types" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All types</SelectItem>
+              {typeOptions.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
