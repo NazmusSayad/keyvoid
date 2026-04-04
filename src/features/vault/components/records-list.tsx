@@ -28,7 +28,11 @@ import {
 } from '@/components/ui/table'
 import type { PublicRecordType } from '@/lib/public-schema'
 import { cn } from '@/lib/utils'
-import { ArrowRight01Icon } from '@hugeicons/core-free-icons'
+import {
+  ArrowRight01Icon,
+  FilterIcon,
+  Tag01Icon,
+} from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   type ColumnFiltersState,
@@ -41,6 +45,7 @@ import {
 } from '@tanstack/react-table'
 import Fuse from 'fuse.js'
 import { useMemo, useState } from 'react'
+import { resolveVaultIcon } from '../constants/vault-icons'
 import { RecordRow } from './record-row'
 
 function parseTagsFromMetadata(metadata?: string) {
@@ -213,10 +218,13 @@ export function RecordsList({ records }: { records: PublicRecordType[] }) {
         <div className="flex flex-wrap items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button type="button" variant="outline" className="min-w-44">
-                {selectedTags.length === 0
-                  ? 'Tags'
-                  : `Tags (${selectedTags.length})`}
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                className="size-10"
+              >
+                <HugeiconsIcon icon={Tag01Icon} className="size-4" />
               </Button>
             </DropdownMenuTrigger>
 
@@ -278,9 +286,17 @@ export function RecordsList({ records }: { records: PublicRecordType[] }) {
               <SelectValue placeholder="All types" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All types</SelectItem>
+              <SelectItem value="all">
+                <HugeiconsIcon icon={FilterIcon} className="size-4" />
+                All types
+              </SelectItem>
+
               {typeOptions.map((type) => (
                 <SelectItem key={type} value={type}>
+                  <HugeiconsIcon
+                    icon={resolveVaultIcon(type)}
+                    className="size-4"
+                  />
                   {type}
                 </SelectItem>
               ))}
