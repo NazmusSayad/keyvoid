@@ -24,7 +24,8 @@ import {
 import { RECORD_TYPES } from '@/features/vault/constants/types'
 import {
   buildRecordCreateFormSchema,
-  CreateRecordFormValues,
+  CreateRecordFormInput,
+  CreateRecordFormOutput,
 } from '@/features/vault/helpers/build-zod-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { File01Icon } from '@hugeicons/core-free-icons'
@@ -38,8 +39,8 @@ type RecordConfigureDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
 
-  defaultValues?: Partial<CreateRecordFormValues>
-  onSubmit: (data: CreateRecordFormValues) => Promise<void>
+  defaultValues?: Partial<CreateRecordFormOutput>
+  onSubmit: (data: CreateRecordFormOutput) => Promise<void>
 }
 
 export function ConfigureRecordDialog({
@@ -56,7 +57,7 @@ function ConfigureRecordDialogContent({
   defaultValues,
   onSubmit,
 }: RecordConfigureDialogProps) {
-  const [selectedType, setSelectedType] = useState('')
+  const [selectedType, setSelectedType] = useState(defaultValues?.type ?? '')
 
   const selectedRecordType = useMemo(
     () => RECORD_TYPES.find((recordType) => recordType.id === selectedType),
@@ -69,10 +70,9 @@ function ConfigureRecordDialogContent({
   )
 
   const formRef = useRef<HTMLFormElement>(null)
-  const form = useForm<CreateRecordFormValues>({
+  const form = useForm<CreateRecordFormInput>({
     defaultValues: {
       name: defaultValues?.name ?? '',
-      type: defaultValues?.type ?? '',
       tags: defaultValues?.tags ?? [],
       data: defaultValues?.data ?? {},
       metadata: defaultValues?.metadata ?? [],
@@ -98,7 +98,7 @@ function ConfigureRecordDialogContent({
           className="space-y-6"
           onSubmit={form.handleSubmit(async (values) => {
             try {
-              await onSubmit(values)
+              await onSubmit({ ...values, type: selectedType })
             } catch (err) {
               if (err instanceof Error) {
                 form.setError('root', { message: err.message })
@@ -126,35 +126,14 @@ function ConfigureRecordDialogContent({
               />
 
               <FormField
-                control={form.control}
                 name="type"
-                render={({ field }) => (
+                render={() => (
                   <FormItem>
                     <FormLabel>Type</FormLabel>
                     <FormControl>
                       <Select
                         value={selectedType}
-                        onValueChange={(nextType) => {
-                          const nextRecordType = RECORD_TYPES.find(
-                            (recordType) => recordType.id === nextType
-                          )
-
-                          setSelectedType(nextType)
-                          field.onChange(nextType)
-
-                          form.setValue(
-                            'data',
-                            nextRecordType
-                              ? Object.fromEntries(
-                                  nextRecordType.fields.map((recordField) => [
-                                    recordField.id,
-                                    '',
-                                  ])
-                                )
-                              : {},
-                            { shouldValidate: true }
-                          )
-                        }}
+                        onValueChange={setSelectedType}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select a record type" />

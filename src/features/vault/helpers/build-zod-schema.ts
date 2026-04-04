@@ -2,13 +2,15 @@ import { encryptRecordClient } from '@/lib/record-encrypt-client'
 import { z } from 'zod'
 import { FieldInputType, RecordTypeDetails } from '../constants/types'
 
-export type CreateRecordFormValues = {
+export type CreateRecordFormInput = {
   name: string
-  type: string
   tags: string[]
-
   data: Record<string, string>
   metadata: Array<[string, string]>
+}
+
+export type CreateRecordFormOutput = CreateRecordFormInput & {
+  type: string | undefined
 }
 
 function createDataFieldValueSchema(type: FieldInputType) {
@@ -34,9 +36,6 @@ export function buildRecordCreateFormSchema(
 ) {
   return z.object({
     name: z.string().trim().min(1, 'Enter a record name.'),
-    type: selectedRecordType
-      ? z.literal(selectedRecordType.id)
-      : z.string().trim().min(1, 'Select a record type.'),
     data: selectedRecordType
       ? z
           .object(
@@ -56,7 +55,7 @@ export function buildRecordCreateFormSchema(
 
 export async function encryptAndPrepareData(
   secret: string,
-  input: CreateRecordFormValues
+  input: CreateRecordFormOutput
 ) {
   const metadata = input.metadata
     .map((field) => [field[0].trim(), field[1].trim()] as [string, string])

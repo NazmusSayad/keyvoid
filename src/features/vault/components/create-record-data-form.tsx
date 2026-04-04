@@ -18,10 +18,10 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import type { RecordTypeDetails } from '@/features/vault/constants/types'
 import type { UseFormReturn } from 'react-hook-form'
-import { CreateRecordFormValues } from '../helpers/build-zod-schema'
+import { CreateRecordFormInput } from '../helpers/build-zod-schema'
 
 type CreateRecordDataFormProps = {
-  form: UseFormReturn<CreateRecordFormValues>
+  form: UseFormReturn<CreateRecordFormInput>
   selectedRecordType: RecordTypeDetails
 }
 
