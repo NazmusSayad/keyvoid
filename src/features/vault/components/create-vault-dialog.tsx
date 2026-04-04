@@ -4,6 +4,7 @@ import {
   BetterDialog,
   BetterDialogContent,
 } from '@/components/ui/better-dialog'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -24,11 +25,11 @@ import { queryClient } from '@/lib/query-client'
 import { createVaultAction } from '@/server/vault/vault'
 import { useAuthStore } from '@/store/use-auth-store'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Add01Icon } from '@hugeicons/core-free-icons'
+import { Add01Icon, ViewIcon, ViewOffIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -59,6 +60,7 @@ function CreateVaultDialogContent({
 }: {
   onOpenChange: (open: boolean) => void
 }) {
+  const [isAuthVisible, setIsAuthVisible] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
   const router = useRouter()
   const setVaultAuth = useAuthStore((state) => state.setVaultAuth)
@@ -138,12 +140,27 @@ function CreateVaultDialogContent({
               <FormItem>
                 <FormLabel>Secret</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    type="password"
-                    placeholder="Vault PIN or password"
-                    disabled={createVaultMutation.isPending}
-                  />
+                  <div className="relative isolate">
+                    <Input
+                      {...field}
+                      type={isAuthVisible ? 'text' : 'password'}
+                      placeholder="Vault PIN or password"
+                      disabled={createVaultMutation.isPending}
+                    />
+
+                    <Button
+                      size="sm"
+                      type="button"
+                      variant="ghost"
+                      className="absolute top-1/2 right-1.5 size-6 -translate-y-1/2"
+                      onClick={() => setIsAuthVisible((prev) => !prev)}
+                    >
+                      <HugeiconsIcon
+                        className="size-3.5"
+                        icon={isAuthVisible ? ViewIcon : ViewOffIcon}
+                      />
+                    </Button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

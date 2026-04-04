@@ -17,6 +17,9 @@ import {
 } from '@/components/ui/input-otp'
 import { Spinner } from '@/components/ui/spinner'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { ViewIcon, ViewOffIcon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -44,6 +47,10 @@ export function ConfirmForgetPasswordForm({
   defaultData: Partial<ConfirmForgetPasswordFormData>
   onSubmit: (data: ConfirmForgetPasswordFormData) => Promise<void> | void
 }) {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false)
+
   const form = useForm({
     defaultValues: {
       confirmPassword: defaultData.confirmPassword ?? '',
@@ -95,12 +102,27 @@ export function ConfirmForgetPasswordForm({
             <FormItem>
               <FormLabel>New password</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="password"
-                  placeholder="New password"
-                  disabled={form.formState.isSubmitting}
-                />
+                <div className="relative isolate">
+                  <Input
+                    {...field}
+                    type={isPasswordVisible ? 'text' : 'password'}
+                    placeholder="New password"
+                    disabled={form.formState.isSubmitting}
+                  />
+
+                  <Button
+                    size="sm"
+                    type="button"
+                    variant="ghost"
+                    className="absolute top-1/2 right-1.5 size-6 -translate-y-1/2"
+                    onClick={() => setIsPasswordVisible((prev) => !prev)}
+                  >
+                    <HugeiconsIcon
+                      className="size-3.5"
+                      icon={isPasswordVisible ? ViewIcon : ViewOffIcon}
+                    />
+                  </Button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -114,12 +136,27 @@ export function ConfirmForgetPasswordForm({
             <FormItem>
               <FormLabel>Confirm password</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="password"
-                  placeholder="Confirm password"
-                  disabled={form.formState.isSubmitting}
-                />
+                <div className="relative isolate">
+                  <Input
+                    {...field}
+                    type={isConfirmPasswordVisible ? 'text' : 'password'}
+                    placeholder="Confirm password"
+                    disabled={form.formState.isSubmitting}
+                  />
+
+                  <Button
+                    size="sm"
+                    type="button"
+                    variant="ghost"
+                    className="absolute top-1/2 right-1.5 size-6 -translate-y-1/2"
+                    onClick={() => setIsConfirmPasswordVisible((prev) => !prev)}
+                  >
+                    <HugeiconsIcon
+                      className="size-3.5"
+                      icon={isConfirmPasswordVisible ? ViewIcon : ViewOffIcon}
+                    />
+                  </Button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
