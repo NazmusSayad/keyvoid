@@ -8,8 +8,8 @@ import {
   BetterDialogContent,
 } from '@/components/ui/better-dialog'
 import { useVaultContext } from '@/features/vault/contexts/vault-context'
-import { decryptRecordClient } from '@/lib/record-encrypt-client'
 import type { PublicRecordType } from '@/lib/public-schema'
+import { decryptRecordClient } from '@/lib/record-encrypt-client'
 import { useQuery } from '@tanstack/react-query'
 
 type RecordDialogProps = {

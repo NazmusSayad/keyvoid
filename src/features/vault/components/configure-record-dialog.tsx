@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { TagInput } from '@/components/ui/tag-input'
 import { RECORD_TYPES } from '@/features/vault/constants/types'
 import {
   buildRecordCreateFormSchema,
@@ -157,6 +158,26 @@ function ConfigureRecordDialogContent({
                 )}
               />
             </div>
+
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tags</FormLabel>
+                  <FormControl>
+                    <TagInput
+                      name={field.name}
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      placeholder="production, backend"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             {selectedRecordType && (
               <CreateRecordDataForm
