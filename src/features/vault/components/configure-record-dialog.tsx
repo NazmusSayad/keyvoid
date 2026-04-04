@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { TagInput } from '@/components/ui/tag-input'
-import { RECORD_TYPES } from '@/features/vault/constants/types'
+import { RECORD_TYPES } from '@/features/vault/constants/record-types'
 import {
   buildRecordCreateFormSchema,
   CreateRecordFormInput,

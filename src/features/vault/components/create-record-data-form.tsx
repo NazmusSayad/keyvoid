@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import type { RecordTypeDetails } from '@/features/vault/constants/types'
+import type { RecordTypeDetails } from '@/features/vault/constants/record-types'
 import type { UseFormReturn } from 'react-hook-form'
 import { CreateRecordFormInput } from '../helpers/build-zod-schema'
 

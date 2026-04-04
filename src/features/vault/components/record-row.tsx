@@ -13,10 +13,10 @@ import {
   Delete02Icon,
   FolderEditIcon,
   MoreVerticalIcon,
-  NoteIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { resolveRecordIcon } from '../constants/record-types'
 import { ViewRecordDialog } from './view-record-dialog'
 
 type RecordRowProps = {
@@ -35,7 +35,10 @@ export function RecordRow({ record }: RecordRowProps) {
       >
         <TableCell className="py-4">
           <div className="flex items-center gap-2">
-            <HugeiconsIcon icon={NoteIcon} className="ml-2 size-5" />
+            <HugeiconsIcon
+              icon={resolveRecordIcon(record.type)}
+              className="ml-2 size-5"
+            />
 
             <span className="font-medium">{record.name}</span>
           </div>

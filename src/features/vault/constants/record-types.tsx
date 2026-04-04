@@ -86,3 +86,10 @@ export const RECORD_TYPES: RecordTypeDetails[] = [
     ],
   },
 ]
+
+export function resolveRecordIcon(type: string | undefined | null) {
+  return (
+    RECORD_TYPES.find((recordType) => recordType.id === type)?.icon ||
+    LoginMethodIcon
+  )
+}

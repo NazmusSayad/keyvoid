@@ -1,6 +1,6 @@
 import { encryptRecordClient } from '@/lib/record-encrypt-client'
 import { z } from 'zod'
-import { FieldInputType, RecordTypeDetails } from '../constants/types'
+import { FieldInputType, RecordTypeDetails } from '../constants/record-types'
 
 export type CreateRecordFormInput = {
   name: string
