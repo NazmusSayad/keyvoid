@@ -13,6 +13,7 @@ import { decryptRecordClient } from '@/lib/record-encrypt-client'
 import { CheckmarkCircle03Icon, Copy02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useQuery } from '@tanstack/react-query'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
 
 type RecordDialogProps = {
@@ -70,48 +71,82 @@ function ViewRecordDialogContent({ record }: RecordDialogProps) {
       }
       description={`Updated: ${new Date(record.updatedAt).toLocaleDateString()}`}
     >
-      {decryptQuery.isPending ? (
-        <RecordDialogSkeleton />
-      ) : decryptQuery.isError ? (
-        <Alert variant="destructive">
-          <AlertTitle>Could not decrypt this record.</AlertTitle>
-          <AlertDescription>
-            Check your vault PIN and try again.
-          </AlertDescription>
-        </Alert>
-      ) : (
-        <div className="space-y-6">
-          {dataFields.length > 0 && (
-            <div className="bg-muted/30 divide-border divide-y rounded-lg border">
-              {dataFields.map(([key, value]) => (
-                <FieldRow key={key} label={key} value={value} />
-              ))}
-            </div>
+      <motion.div layout className="overflow-hidden">
+        <AnimatePresence mode="sync" initial={false}>
+          {decryptQuery.isPending && (
+            <motion.div
+              key="pending"
+              layout
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.18, ease: 'easeOut' }}
+            >
+              <RecordDialogSkeleton />
+            </motion.div>
           )}
 
-          {metadataFields.length > 0 && (
-            <div className="bg-muted/30 divide-border divide-y rounded-lg border">
-              {metadataFields.map(([key, value]) => (
-                <FieldRow key={key} label={key} value={value} />
-              ))}
-            </div>
+          {decryptQuery.isError && (
+            <motion.div
+              key="error"
+              layout
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.18, ease: 'easeOut' }}
+            >
+              <Alert variant="destructive">
+                <AlertTitle>Could not decrypt this record.</AlertTitle>
+                <AlertDescription>
+                  Check your vault PIN and try again.
+                </AlertDescription>
+              </Alert>
+            </motion.div>
           )}
 
-          {record.tags.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2">
-              {record.tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant="outline"
-                  className="rounded-full px-2.5 py-1 text-xs"
-                >
-                  {tag}
-                </Badge>
-              ))}
-            </div>
+          {!decryptQuery.isPending && !decryptQuery.isError && (
+            <motion.div
+              key="content"
+              layout
+              className="space-y-6"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.18, ease: 'easeOut' }}
+            >
+              {dataFields.length > 0 && (
+                <div className="bg-muted/30 divide-border divide-y rounded-lg border">
+                  {dataFields.map(([key, value]) => (
+                    <FieldRow key={key} label={key} value={value} />
+                  ))}
+                </div>
+              )}
+
+              {metadataFields.length > 0 && (
+                <div className="bg-muted/30 divide-border divide-y rounded-lg border">
+                  {metadataFields.map(([key, value]) => (
+                    <FieldRow key={key} label={key} value={value} />
+                  ))}
+                </div>
+              )}
+
+              {record.tags.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2">
+                  {record.tags.map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="outline"
+                      className="rounded-full px-2.5 py-1 text-xs"
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </motion.div>
           )}
-        </div>
-      )}
+        </AnimatePresence>
+      </motion.div>
     </BetterDialogContent>
   )
 }

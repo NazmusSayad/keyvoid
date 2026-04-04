@@ -41,16 +41,6 @@ export function RecordRow({ record }: RecordRowProps) {
           </div>
         </TableCell>
 
-        <TableCell>
-          {record.type?.trim() ? (
-            <Badge variant="outline" className="uppercase">
-              {record.type}
-            </Badge>
-          ) : (
-            <span className="text-muted-foreground text-sm">N/A</span>
-          )}
-        </TableCell>
-
         <TableCell className="text-muted-foreground">
           {new Date(record.updatedAt).toLocaleDateString()}
         </TableCell>

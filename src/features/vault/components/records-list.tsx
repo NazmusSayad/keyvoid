@@ -12,13 +12,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import {
   Table,
   TableBody,
   TableCell,
@@ -31,7 +24,6 @@ import { cn } from '@/lib/utils'
 import {
   ArrowRight01Icon,
   Cancel01Icon,
-  FilterIcon,
   Tag01Icon,
   TagsIcon,
 } from '@hugeicons/core-free-icons'
@@ -47,7 +39,6 @@ import {
 } from '@tanstack/react-table'
 import Fuse from 'fuse.js'
 import { useMemo, useState } from 'react'
-import { resolveVaultIcon } from '../constants/vault-icons'
 import { RecordRow } from './record-row'
 
 export function RecordsList({ records }: { records: PublicRecordType[] }) {
@@ -78,7 +69,7 @@ export function RecordsList({ records }: { records: PublicRecordType[] }) {
     }
 
     return new Fuse(data, {
-      keys: ['record.name', 'record.type', 'tagsLabel'],
+      keys: ['record.name', 'tagsLabel'],
       threshold: 0.35,
       ignoreLocation: true,
     })
@@ -93,18 +84,6 @@ export function RecordsList({ records }: { records: PublicRecordType[] }) {
         id: 'name',
         accessorFn: (row) => row.record.name,
         header: 'Name',
-      },
-      {
-        id: 'type',
-        accessorFn: (row) => row.record.type?.trim() || 'N/A',
-        header: 'Type',
-        filterFn: (row, columnId, filterValue) => {
-          if (!filterValue) {
-            return true
-          }
-
-          return row.getValue(columnId) === filterValue
-        },
       },
       {
         id: 'lastUpdated',
@@ -144,21 +123,11 @@ export function RecordsList({ records }: { records: PublicRecordType[] }) {
     getFilteredRowModel: getFilteredRowModel(),
   })
 
-  const typeOptions = useMemo(
-    () =>
-      Array.from(
-        new Set(records.map((record) => record.type?.trim() || 'N/A'))
-      ).sort((a, b) => a.localeCompare(b)),
-    [records]
-  )
-
   const tagOptions = useMemo(
     () => Array.from(new Set(data.flatMap((row) => row.tags))).sort(),
     [data]
   )
 
-  const typeFilterValue =
-    String(table.getColumn('type')?.getFilterValue() ?? 'all') || 'all'
   const tagsFilterValue = table.getColumn('tags')?.getFilterValue()
   const selectedTags = Array.isArray(tagsFilterValue)
     ? tagsFilterValue.map((tag) => String(tag))
@@ -170,7 +139,7 @@ export function RecordsList({ records }: { records: PublicRecordType[] }) {
         <Input
           value={globalFilter}
           onChange={(event) => setGlobalFilter(event.target.value)}
-          placeholder="Filter by name, type, or tags"
+          placeholder="Filter by name or tags"
           className="w-full sm:max-w-sm"
         />
 
@@ -238,45 +207,15 @@ export function RecordsList({ records }: { records: PublicRecordType[] }) {
               )}
             </DropdownMenuContent>
           </DropdownMenu>
-
-          <Select
-            value={typeFilterValue}
-            onValueChange={(value) => {
-              table
-                .getColumn('type')
-                ?.setFilterValue(value === 'all' ? undefined : value)
-            }}
-          >
-            <SelectTrigger className="h-10 min-w-44">
-              <SelectValue placeholder="All types" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">
-                <HugeiconsIcon icon={FilterIcon} className="size-4" />
-                All types
-              </SelectItem>
-
-              {typeOptions.map((type) => (
-                <SelectItem key={type} value={type}>
-                  <HugeiconsIcon
-                    icon={resolveVaultIcon(type)}
-                    className="size-4"
-                  />
-                  {type}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
         </div>
       </div>
 
       <div className="border-border bg-card overflow-hidden rounded-lg border shadow-sm">
         <Table className="table-fixed">
           <colgroup>
-            <col className="w-[34%]" />
-            <col className="w-[18%]" />
+            <col className="w-[42%]" />
             <col className="w-[16%]" />
-            <col className="w-[24%]" />
+            <col className="w-[34%]" />
             <col className="w-[8%]" />
           </colgroup>
 
